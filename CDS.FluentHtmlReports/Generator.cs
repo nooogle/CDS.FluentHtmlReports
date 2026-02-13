@@ -33,32 +33,6 @@ public class Generator
         return this;
     }
 
-    //public Generator AddMetadataSection(Action<MetadataBuilder> configure)
-    //{
-    //    html.AppendLine("<div class=\"metadata-section\">");
-    //    var builder = new MetadataBuilder(html);
-    //    configure(builder);
-    //    html.AppendLine("</div>");
-    //    return this;
-    //}
-
-    //public Generator AddTable(Action<TableBuilder> configure)
-    //{
-    //    html.AppendLine("<table>");
-    //    var builder = new TableBuilder(html);
-    //    configure(builder);
-    //    html.AppendLine("</table>");
-    //    return this;
-    //}
-
-    public Generator AddChartContainer(string svgContent)
-    {
-        html.AppendLine("<div class=\"chart-container\">");
-        html.AppendLine(svgContent);
-        html.AppendLine("</div>");
-        return this;
-    }
-
     public Generator AddHtml(string htmlContent)
     {
         html.AppendLine(htmlContent);
@@ -194,4 +168,117 @@ public class Generator
             }
         """);
     }
+
+    public Generator AddLabelValueRow(IEnumerable<(string, string)> values)
+    {
+        if (values == null) { return this; }
+
+        html.AppendLine("<div class=\"metadata\">");
+        foreach (var value in values)
+        {
+            html.AppendLine($"<span><strong>{value.Item1}:</strong> {value.Item2}</span>");
+        }
+        html.AppendLine("</div>");
+
+        return this;
+    }
+
+
+    public Generator AddTable(
+        TableFixedHeader header,
+        object[] values)
+    {
+        if (values == null) { return this; }
+
+        var properties = values[0].GetType().GetProperties();
+        var hasHeaderRow = header == TableFixedHeader.Header || header == TableFixedHeader.Both;
+        var hasFirstColumnFixed = header == TableFixedHeader.FirstColumn || header == TableFixedHeader.Both;
+
+        html.AppendLine("<table>");
+
+        // Add header row - with or without special formatting based on enum
+        html.AppendLine("<thead><tr>");
+        var isFirstHeader = true;
+        foreach (var prop in properties)
+        {
+            var shouldFormat = hasHeaderRow || (isFirstHeader && hasFirstColumnFixed);
+
+            if (shouldFormat)
+            {
+                // Apply background and bold formatting to header
+                html.AppendLine($"<th>{prop.Name}</th>");
+            }
+            else
+            {
+                // No special formatting when None
+                html.AppendLine($"<th style=\"background: transparent; font-weight: normal;\">{prop.Name}</th>");
+            }
+            isFirstHeader = false;
+        }
+        html.AppendLine("</tr></thead>");
+
+        // Add body rows
+        html.AppendLine("<tbody>");
+        foreach (var value in values)
+        {
+            html.AppendLine("<tr>");
+            var isFirstCell = true;
+            foreach (var prop in properties)
+            {
+                var cellValue = prop.GetValue(value)?.ToString() ?? "";
+                if (isFirstCell && hasFirstColumnFixed)
+                {
+                    // Apply background and bold to first column (no alignment change)
+                    html.AppendLine($"<td style=\"background: #f1f3f5; font-weight: 600;\">{cellValue}</td>");
+                }
+                else
+                {
+                    html.AppendLine($"<td>{cellValue}</td>");
+                }
+                isFirstCell = false;
+            }
+            html.AppendLine("</tr>");
+        }
+        html.AppendLine("</tbody>");
+
+        html.AppendLine("</table>");
+        return this;
+    }
+
+    public Generator AddLine(LineType lineType = LineType.Solid)
+    {
+        switch (lineType)
+        {
+            case LineType.Blank:
+                html.AppendLine("<div style=\"height: 20px;\"></div>");
+                break;
+            case LineType.Solid:
+                html.AppendLine("<hr style=\"border: none; border-top: 1px solid #dee2e6; margin: 20px 0;\" />");
+                break;
+            case LineType.Dashed:
+                html.AppendLine("<hr style=\"border: none; border-top: 1px dashed #dee2e6; margin: 20px 0;\" />");
+                break;
+            case LineType.Dotted:
+                html.AppendLine("<hr style=\"border: none; border-top: 1px dotted #dee2e6; margin: 20px 0;\" />");
+                break;
+        }
+        return this;
+    }
 }
+
+public enum TableFixedHeader
+{
+    None,
+    Header,
+    FirstColumn,
+    Both
+}
+
+public enum LineType
+{
+    Blank,
+    Solid,
+    Dashed,
+    Dotted
+}
+
