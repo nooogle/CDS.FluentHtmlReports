@@ -1,1 +1,4 @@
-<Solution />
+<Solution>
+  <Project Path="CDS.FluentHtmlReports/CDS.FluentHtmlReports.csproj" />
+  <Project Path="ConsoleTest/ConsoleTest.csproj" />
+</Solution>
