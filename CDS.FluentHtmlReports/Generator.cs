@@ -1,10 +1,12 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
 
 namespace CDS.FluentHtmlReports;
 
 public class Generator
 {
     private StringBuilder html = new(16384);
+    private ReportOptions options = new();
 
     public static Generator Create(string title)
     {
@@ -12,6 +14,18 @@ public class Generator
         AppendDocumentStart(generator.html);
         generator.html.AppendLine($"<h1>{title}</h1>");
         return generator;
+    }
+
+    public Generator WithOptions(ReportOptions options)
+    {
+        this.options = options ?? new ReportOptions();
+        return this;
+    }
+
+    public Generator WithOptions(Action<ReportOptions> configure)
+    {
+        configure?.Invoke(options);
+        return this;
     }
 
 
@@ -264,6 +278,282 @@ public class Generator
         }
         return this;
     }
+
+
+    public Generator AddVerticalBarChart(string title, (string label, int value, string color)[] data)
+    {
+        if (data == null || data.Length == 0) { return this; }
+
+        // Use widthPercent parameter if provided, otherwise fall back to options
+        int effectiveWidthPercent = options.ChartWidthPercent;
+
+        html.AppendLine($"<h2>{Enc(title)}</h2>");
+
+        // Apply alignment and sizing to container div
+        var alignment = options.ChartAlignment switch
+        {
+            ChartAlignment.Left => "text-align: left;",
+            ChartAlignment.Center => "text-align: center;",
+            ChartAlignment.Right => "text-align: right;",
+            _ => "text-align: left;"
+        };
+
+        // Layout constants
+        const int marginLeft = 60;
+        const int marginTop = 30;
+        const int marginBottom = 40;
+        const int marginRight = 20;
+        const int svgHeight = 480;
+        const int chartHeight = svgHeight - marginTop - marginBottom;
+        const int minBarWidth = 20;
+
+        // Fixed viewBox width matching the container
+        const int containerWidth = 900;
+        int svgWidth = containerWidth * effectiveWidthPercent / 100;
+        int chartWidth = svgWidth - marginLeft - marginRight;
+
+        // Calculate bar width dynamically with a fixed gap
+        // Bars fill all available space after accounting for gaps
+        const int gap = 10;
+        int barWidth;
+        if (data.Length == 1)
+        {
+            barWidth = chartWidth;
+        }
+        else
+        {
+            barWidth = (chartWidth - gap * (data.Length - 1)) / data.Length;
+            barWidth = Math.Max(minBarWidth, barWidth);
+        }
+
+        int maxWidth = svgWidth;
+
+        html.AppendLine($"<div class=\"chart-container\" style=\"max-width:{maxWidth}px; {alignment}\">");
+
+        int maxValue = Math.Max(1, data.Max(d => d.value));
+
+        // Position the bars within the chart area
+        int totalBarArea = data.Length * barWidth + (data.Length - 1) * gap;
+        int startX = marginLeft + (chartWidth - totalBarArea) / 2;
+
+        html.AppendLine($"<svg viewBox=\"0 0 {svgWidth} {svgHeight}\" " +
+                         $"width=\"100%\" height=\"{svgHeight}\" preserveAspectRatio=\"xMinYMin meet\" " +
+                         "xmlns=\"http://www.w3.org/2000/svg\">");
+
+        // Horizontal grid lines and Y-axis labels
+        const int gridLines = 4;
+        for (int i = 0; i <= gridLines; i++)
+        {
+            int y = marginTop + chartHeight - (i * chartHeight / gridLines);
+            int gridValue = maxValue * i / gridLines;
+
+            html.AppendLine($"<line x1=\"{marginLeft}\" y1=\"{y}\" " +
+                             $"x2=\"{svgWidth - marginRight}\" y2=\"{y}\" " +
+                             "stroke=\"#e0e0e0\" stroke-width=\"1\" />");
+
+            html.AppendLine($"<text x=\"{marginLeft - 8}\" y=\"{y + 4}\" " +
+                             "text-anchor=\"end\" font-size=\"11\" fill=\"#888\">" +
+                             $"{gridValue}</text>");
+        }
+
+        // Axes
+        html.AppendLine($"<line x1=\"{marginLeft}\" y1=\"{marginTop}\" " +
+                         $"x2=\"{marginLeft}\" y2=\"{marginTop + chartHeight}\" " +
+                         "stroke=\"#999\" stroke-width=\"1\" />");
+        html.AppendLine($"<line x1=\"{marginLeft}\" y1=\"{marginTop + chartHeight}\" " +
+                         $"x2=\"{svgWidth - marginRight}\" y2=\"{marginTop + chartHeight}\" " +
+                         "stroke=\"#999\" stroke-width=\"1\" />");
+
+        // Bars, value labels, and category labels
+        for (int i = 0; i < data.Length; i++)
+        {
+            int barX = startX + i * (barWidth + gap);
+            int barHeight = maxValue > 0 ? data[i].value * chartHeight / maxValue : 0;
+            int barY = marginTop + chartHeight - barHeight;
+            int centerX = barX + barWidth / 2;
+
+            // Bar rectangle
+            html.AppendLine($"<rect x=\"{barX}\" y=\"{barY}\" " +
+                             $"width=\"{barWidth}\" height=\"{barHeight}\" " +
+                             $"fill=\"{Enc(data[i].color)}\" rx=\"3\" />");
+
+            // Count value above the bar
+            html.AppendLine($"<text x=\"{centerX}\" y=\"{barY - 6}\" " +
+                             "text-anchor=\"middle\" font-size=\"13\" " +
+                             $"font-weight=\"600\" fill=\"#333\">{data[i].value}</text>");
+
+            // Category label below the X-axis
+            html.AppendLine($"<text x=\"{centerX}\" y=\"{marginTop + chartHeight + 22}\" " +
+                             $"text-anchor=\"middle\" font-size=\"13\" fill=\"#333\">" +
+                             $"{Enc(data[i].label)}</text>");
+        }
+
+        html.AppendLine("</svg>");
+        html.AppendLine("</div>");
+
+        return this;
+    }
+
+    public Generator AddVerticalBarChart(string title, (string label, int value)[] data)
+    {
+        if (data == null || data.Length == 0) { return this; }
+
+        // Default color palette
+        string[] defaultColors = 
+        [
+            "#4CAF50", "#2196F3", "#FF9800", "#F44336", "#9C27B0",
+            "#00BCD4", "#FFEB3B", "#795548", "#607D8B", "#E91E63"
+        ];
+
+        var dataWithColors = data.Select((d, i) => 
+            (d.label, d.value, defaultColors[i % defaultColors.Length]))
+            .ToArray();
+
+        return AddVerticalBarChart(title, dataWithColors);
+    }
+
+
+    public Generator AddHorizontalBarChart(string title, (string label, int value, string color)[] data)
+    {
+        if (data == null || data.Length == 0) { return this; }
+
+        int effectiveWidthPercent = options.ChartWidthPercent;
+
+        html.AppendLine($"<h2>{Enc(title)}</h2>");
+
+        var alignment = options.ChartAlignment switch
+        {
+            ChartAlignment.Left => "text-align: left;",
+            ChartAlignment.Center => "text-align: center;",
+            ChartAlignment.Right => "text-align: right;",
+            _ => "text-align: left;"
+        };
+
+        // Layout constants
+        const int marginLeft = 120;
+        const int marginTop = 30;
+        const int marginBottom = 30;
+        const int marginRight = 50;
+        const int svgHeight = 480;
+        const int chartHeight = svgHeight - marginTop - marginBottom;
+        const int minBarHeight = 16;
+
+        const int containerWidth = 900;
+        int svgWidth = containerWidth * effectiveWidthPercent / 100;
+        int chartWidth = svgWidth - marginLeft - marginRight;
+
+        // Calculate bar height dynamically with a fixed gap
+        const int gap = 8;
+        int barHeight;
+        if (data.Length == 1)
+        {
+            barHeight = chartHeight;
+        }
+        else
+        {
+            barHeight = (chartHeight - gap * (data.Length - 1)) / data.Length;
+            barHeight = Math.Max(minBarHeight, barHeight);
+        }
+
+        int maxWidth = svgWidth;
+
+        html.AppendLine($"<div class=\"chart-container\" style=\"max-width:{maxWidth}px; {alignment}\">");
+
+        int maxValue = Math.Max(1, data.Max(d => d.value));
+
+        // Position the bars within the chart area
+        int totalBarArea = data.Length * barHeight + (data.Length - 1) * gap;
+        int startY = marginTop + (chartHeight - totalBarArea) / 2;
+
+        html.AppendLine($"<svg viewBox=\"0 0 {svgWidth} {svgHeight}\" " +
+                         $"width=\"100%\" height=\"{svgHeight}\" preserveAspectRatio=\"xMinYMin meet\" " +
+                         "xmlns=\"http://www.w3.org/2000/svg\">");
+
+        // Vertical grid lines and X-axis labels
+        const int gridLines = 4;
+        for (int i = 0; i <= gridLines; i++)
+        {
+            int x = marginLeft + (i * chartWidth / gridLines);
+            int gridValue = maxValue * i / gridLines;
+
+            html.AppendLine($"<line x1=\"{x}\" y1=\"{marginTop}\" " +
+                             $"x2=\"{x}\" y2=\"{marginTop + chartHeight}\" " +
+                             "stroke=\"#e0e0e0\" stroke-width=\"1\" />");
+
+            html.AppendLine($"<text x=\"{x}\" y=\"{marginTop + chartHeight + 18}\" " +
+                             "text-anchor=\"middle\" font-size=\"11\" fill=\"#888\">" +
+                             $"{gridValue}</text>");
+        }
+
+        // Axes
+        html.AppendLine($"<line x1=\"{marginLeft}\" y1=\"{marginTop}\" " +
+                         $"x2=\"{marginLeft}\" y2=\"{marginTop + chartHeight}\" " +
+                         "stroke=\"#999\" stroke-width=\"1\" />");
+        html.AppendLine($"<line x1=\"{marginLeft}\" y1=\"{marginTop + chartHeight}\" " +
+                         $"x2=\"{svgWidth - marginRight}\" y2=\"{marginTop + chartHeight}\" " +
+                         "stroke=\"#999\" stroke-width=\"1\" />");
+
+        // Bars, value labels, and category labels
+        for (int i = 0; i < data.Length; i++)
+        {
+            int barY = startY + i * (barHeight + gap);
+            int barW = maxValue > 0 ? data[i].value * chartWidth / maxValue : 0;
+            int centerY = barY + barHeight / 2;
+
+            // Bar rectangle
+            html.AppendLine($"<rect x=\"{marginLeft}\" y=\"{barY}\" " +
+                             $"width=\"{barW}\" height=\"{barHeight}\" " +
+                             $"fill=\"{Enc(data[i].color)}\" rx=\"3\" />");
+
+            // Value label to the right of the bar
+            html.AppendLine($"<text x=\"{marginLeft + barW + 6}\" y=\"{centerY + 4}\" " +
+                             "text-anchor=\"start\" font-size=\"13\" " +
+                             $"font-weight=\"600\" fill=\"#333\">{data[i].value}</text>");
+
+            // Category label to the left of the Y-axis
+            html.AppendLine($"<text x=\"{marginLeft - 8}\" y=\"{centerY + 4}\" " +
+                             $"text-anchor=\"end\" font-size=\"13\" fill=\"#333\">" +
+                             $"{Enc(data[i].label)}</text>");
+        }
+
+        html.AppendLine("</svg>");
+        html.AppendLine("</div>");
+
+        return this;
+    }
+
+    public Generator AddHorizontalBarChart(string title, (string label, int value)[] data)
+    {
+        if (data == null || data.Length == 0) { return this; }
+
+        string[] defaultColors =
+        [
+            "#4CAF50", "#2196F3", "#FF9800", "#F44336", "#9C27B0",
+            "#00BCD4", "#FFEB3B", "#795548", "#607D8B", "#E91E63"
+        ];
+
+        var dataWithColors = data.Select((d, i) =>
+            (d.label, d.value, defaultColors[i % defaultColors.Length]))
+            .ToArray();
+
+        return AddHorizontalBarChart(title, dataWithColors);
+    }
+
+
+    private static string Enc(string value) => WebUtility.HtmlEncode(value ?? string.Empty);
+}
+
+public class ReportOptions
+{
+    public int ChartWidthPercent { get; set; } = 100;
+    public ChartAlignment ChartAlignment { get; set; } = ChartAlignment.Left;
+}
+
+public enum ChartAlignment
+{
+    Left,
+    Center,
+    Right
 }
 
 public enum TableFixedHeader

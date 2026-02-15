@@ -5,6 +5,7 @@ var report =
     .FluentHtmlReports
     .Generator
     .Create(title: "Monthly Report")
+    .WithOptions(new CDS.FluentHtmlReports.ReportOptions() { ChartWidthPercent = 75, ChartAlignment = CDS.FluentHtmlReports.ChartAlignment.Right})
     .AddParagraph("This is the monthly report for June 2024.")
     .AddSection("Sales")
     .AddParagraph("Total sales for the month: $100,000")
@@ -37,6 +38,12 @@ var report =
         new { Product = "Product B", Quantity = 5, Price = 19.99 },
         new { Product = "Product C", Quantity = 2, Price = 29.99 }
     })
+    .AddVerticalBarChart("Chart 1", [("Pass", 1, "lime"), ("Fail", 2, "red"), ("NoLens", 4, "orange")])
+    .AddVerticalBarChart("Chart 2", Enumerable.Range(1, 6).Select(x =>  (x.ToString(), x * x)).ToArray())
+    .AddVerticalBarChart("Chart 3", Enumerable.Range(1, 20).Select(x => (x.ToString(), x * x)).ToArray())
+    .AddHorizontalBarChart("Horizontal Chart 1", [("Pass", 42, "lime"), ("Fail", 17, "red"), ("Skipped", 5, "orange")])
+    .AddHorizontalBarChart("Horizontal Chart 2", Enumerable.Range(1, 8).Select(x => ($"Category {x}", x * 7)).ToArray())
+    .AddHorizontalBarChart("Horizontal Chart 3", Enumerable.Range(1, 20).Select(x => ($"Item {x}", x * 3)).ToArray())
     .Generate();
 
 var fileName =
