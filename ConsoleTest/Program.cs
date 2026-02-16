@@ -20,6 +20,11 @@ Console.WriteLine($"Generating reports to: {outputFolder}");
 // ── Generate all demo reports ───────────────────────────────────────────
 var demos = new (string fileName, string title, string description, Func<string> generate)[]
 {
+    ("00-quick-start.html",
+     "Quick Start",
+     "A minimal example showing the fluent API — perfect for README/documentation.",
+     QuickStartDemo.Generate),
+
     ("01-text-features.html",
      "Text Features",
      "Headings, paragraphs, lists, alerts, code blocks, badges, links, definition lists, and separators.",
@@ -77,6 +82,7 @@ var indexHtml = Generator
     .AddParagraph("Click any link below to open the corresponding feature demo:")
 
     // Links to each demo
+    .AddLink("0. Quick Start — minimal example perfect for README/documentation (⭐ Start here!)", "00-quick-start.html")
     .AddLink("1. Text Features — headings, lists, alerts, code blocks, badges, links, definitions", "01-text-features.html")
     .AddLink("2. Table Features — header modes, conditional formatting, summary rows, key-value tables", "02-table-features.html")
     .AddLink("3. Chart Features — vertical/horizontal bars, pie, donut, line charts", "03-chart-features.html")
