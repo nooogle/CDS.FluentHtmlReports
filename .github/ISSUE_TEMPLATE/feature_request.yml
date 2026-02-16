@@ -1,0 +1,59 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature!
+  
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem would this feature solve?
+      placeholder: I'm trying to... but I can't because...
+    validations:
+      required: true
+  
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How should this feature work?
+      placeholder: |
+        ```csharp
+        // Example API
+        var html = Generator.Create("Test")
+            .AddNewFeature(...)
+            .Generate();
+        ```
+    validations:
+      required: true
+  
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative solutions or workarounds?
+  
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe a real-world scenario where this would be useful
+    validations:
+      required: true
+  
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      description: Does this fit with the project's goals?
+      options:
+        - label: This feature aligns with generating HTML reports
+          required: true
+        - label: This feature maintains zero external dependencies
+          required: true
+        - label: I'm willing to submit a PR for this feature

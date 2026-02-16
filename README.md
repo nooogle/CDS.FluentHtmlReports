@@ -3,6 +3,9 @@
 A zero-dependency .NET library for generating self-contained HTML reports using a fluent API. No JavaScript, no external CSS, no build tools — just clean HTML you can open in any browser, email as an attachment, or print to PDF.
 
 [![NuGet](https://img.shields.io/nuget/v/CDS.FluentHtmlReports)](https://www.nuget.org/packages/CDS.FluentHtmlReports)
+[![CI](https://github.com/nooogle/CDS.FluentHtmlReports/actions/workflows/ci.yml/badge.svg)](https://github.com/nooogle/CDS.FluentHtmlReports/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/nooogle/CDS.FluentHtmlReports/actions/workflows/codeql.yml/badge.svg)](https://github.com/nooogle/CDS.FluentHtmlReports/actions/workflows/codeql.yml)
+[![codecov](https://codecov.io/gh/nooogle/CDS.FluentHtmlReports/branch/master/graph/badge.svg)](https://codecov.io/gh/nooogle/CDS.FluentHtmlReports)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
 
 ## Why?
