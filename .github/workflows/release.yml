@@ -46,7 +46,7 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal
     
     - name: Pack NuGet package
-      run: dotnet pack --configuration Release --no-build --output ./artifacts
+      run: dotnet pack CDS.FluentHtmlReports/CDS.FluentHtmlReports.csproj --configuration Release --no-build --output ./artifacts
     
     - name: Get version from tag
       id: get_version
@@ -73,7 +73,7 @@ jobs:
     - name: Push to NuGet.org
       if: startsWith(github.ref, 'refs/tags/')
       run: |
-        dotnet nuget push ./artifacts/*.nupkg \
+        dotnet nuget push ./artifacts/CDS.FluentHtmlReports.*.nupkg \
           --api-key ${{ secrets.NUGET_API_KEY }} \
           --source https://api.nuget.org/v3/index.json \
           --skip-duplicate
