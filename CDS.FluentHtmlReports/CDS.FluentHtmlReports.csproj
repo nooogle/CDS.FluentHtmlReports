@@ -19,7 +19,8 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <!-- MinVer: version derived from git tags (e.g. git tag 1.0.0) -->
+    <!-- MinVer: version derived from git tags (e.g. git tag v1.0.0) -->
+    <MinVerTagPrefix>v</MinVerTagPrefix>
     <MinVerMinimumMajorMinor>1.0</MinVerMinimumMajorMinor>
   </PropertyGroup>
 
