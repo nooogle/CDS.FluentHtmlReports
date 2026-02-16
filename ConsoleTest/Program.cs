@@ -7,7 +7,11 @@ var report =
     .Create(title: "Monthly Report")
     .WithOptions(new CDS.FluentHtmlReports.ReportOptions() { ChartWidthPercent = 75, ChartAlignment = CDS.FluentHtmlReports.ChartAlignment.Right})
     .AddParagraph("This is the monthly report for June 2024.")
-    .AddSection("Sales")
+    .AddHeading("Heading 2", CDS.FluentHtmlReports.HeadingLevel.H2)
+    .AddHeading("Heading 3", CDS.FluentHtmlReports.HeadingLevel.H3)
+    .AddHeading("Heading 4", CDS.FluentHtmlReports.HeadingLevel.H4) 
+    .AddHeading("Heading 5", CDS.FluentHtmlReports.HeadingLevel.H5)
+    .AddHeading("Heading 6", CDS.FluentHtmlReports.HeadingLevel.H6)
     .AddParagraph("Total sales for the month: $100,000")
     .AddLine(CDS.FluentHtmlReports.LineType.Blank)
     .AddLabelValueRow([("User", Environment.UserName), ("PC", Environment.MachineName)])
@@ -43,6 +47,7 @@ var report =
     .AddVerticalBarChart("Chart 3", Enumerable.Range(1, 20).Select(x => (x.ToString(), x * x)).ToArray())
     .AddHorizontalBarChart("Horizontal Chart 1", [("Pass", 42, "lime"), ("Fail", 17, "red"), ("Skipped", 5, "orange")])
     .AddHorizontalBarChart("Horizontal Chart 2", Enumerable.Range(1, 8).Select(x => ($"Category {x}", x * 7)).ToArray())
+    .WithOptions(new CDS.FluentHtmlReports.ReportOptions() {  ChartHeight = 600})
     .AddHorizontalBarChart("Horizontal Chart 3", Enumerable.Range(1, 20).Select(x => ($"Item {x}", x * 3)).ToArray())
     .Generate();
 
