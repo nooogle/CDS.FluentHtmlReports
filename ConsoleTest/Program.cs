@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reflection;
 using CDS.FluentHtmlReports;
 using ConsoleTest.Demos;
 
@@ -60,8 +61,15 @@ foreach (var (fileName, title, _, generate) in demos)
 }
 
 // ── Generate the index report with links to all demos ───────────────────
+var fullVersion = typeof(Generator).Assembly
+    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+    ?.InformationalVersion ?? "unknown";
+
+// Strip build metadata (the +commithash part) from version string
+var libraryVersion = fullVersion.Split('+')[0];
+
 var indexHtml = Generator
-    .Create("CDS.FluentHtmlReports — Demo Index")
+    .Create($"CDS.FluentHtmlReports version {libraryVersion} — Demo Index")
     .AddParagraph("Welcome! This index links to all feature demonstration reports. Each report showcases a different category of the library's capabilities.")
     .AddLabelValueRow([
         ("Generated", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
