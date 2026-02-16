@@ -1,9 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- NuGet package metadata -->
+    <PackageId>CDS.FluentHtmlReports</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Carpe Diem Systems</Authors>
+    <Company>Carpe Diem Systems</Company>
+    <Description>A zero-dependency fluent API for generating self-contained HTML reports with tables, SVG charts, KPI cards, progress bars, and more. No JavaScript, no external CSS — just clean HTML you can open in any browser, email, or print to PDF.</Description>
+    <PackageTags>html;report;fluent;svg;chart;table;pdf;generator;reporting;dotnet</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/nooogle/CDS.FluentHtmlReports</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nooogle/CDS.FluentHtmlReports</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>
