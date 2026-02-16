@@ -371,7 +371,7 @@ public class Generator
         html.AppendLine("<!DOCTYPE html>");
         html.AppendLine("<html lang=\"en\">");
         html.AppendLine("<head>");
-        html.AppendLine("<meta charset=\"UTF-8\">");
+        html.AppendLine("<meta charset=\"utf-8\">");
         html.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
         html.AppendLine($"<title>{title}</title>");
         html.AppendLine("<style>");

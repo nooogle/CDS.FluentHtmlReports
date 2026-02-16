@@ -23,7 +23,7 @@ internal class TextRenderer(StringBuilder _html)
     /// </summary>
     internal void AddParagraph(string text)
     {
-        _html.AppendLine($"<p>{text}</p>");
+        _html.AppendLine($"<p>{Enc(text)}</p>");
     }
 
     /// <summary>
@@ -112,16 +112,16 @@ internal class TextRenderer(StringBuilder _html)
     /// </summary>
     internal void AddAlert(AlertLevel level, string message)
     {
-        var (bg, border, icon) = level switch
+        var (bg, border, icon, cssClass) = level switch
         {
-            AlertLevel.Info    => ("#e3f2fd", "#1976D2", "\u2139\uFE0F"),
-            AlertLevel.Success => ("#e8f5e9", "#4CAF50", "\u2705"),
-            AlertLevel.Warning => ("#fff8e1", "#FF9800", "\u26A0\uFE0F"),
-            AlertLevel.Error   => ("#ffebee", "#F44336", "\u274C"),
-            _                  => ("#e3f2fd", "#1976D2", "\u2139\uFE0F")
+            AlertLevel.Info    => ("#e3f2fd", "#1976D2", "\u2139\uFE0F", "alert-info"),
+            AlertLevel.Success => ("#e8f5e9", "#4CAF50", "\u2705", "alert-success"),
+            AlertLevel.Warning => ("#fff8e1", "#FF9800", "\u26A0\uFE0F", "alert-warning"),
+            AlertLevel.Error   => ("#ffebee", "#F44336", "\u274C", "alert-error"),
+            _                  => ("#e3f2fd", "#1976D2", "\u2139\uFE0F", "alert-info")
         };
 
-        _html.AppendLine($"<div class=\"alert\" style=\"background:{bg}; border-left:4px solid {border};\">");
+        _html.AppendLine($"<div class=\"alert {cssClass}\" style=\"background:{bg}; border-left:4px solid {border};\">");
         _html.AppendLine($"<span class=\"alert-icon\">{icon}</span> {Enc(message)}");
         _html.AppendLine("</div>");
     }

@@ -4,6 +4,7 @@
     <File Path="LICENSE.txt" />
     <File Path="README.md" />
   </Folder>
+  <Project Path="CDS.FluentHtmlReports.Tests/CDS.FluentHtmlReports.Tests.csproj" />
   <Project Path="CDS.FluentHtmlReports/CDS.FluentHtmlReports.csproj" />
   <Project Path="ConsoleTest/ConsoleTest.csproj" />
 </Solution>
