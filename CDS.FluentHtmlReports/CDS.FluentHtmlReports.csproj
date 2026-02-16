@@ -8,7 +8,6 @@
 
     <!-- NuGet package metadata -->
     <PackageId>CDS.FluentHtmlReports</PackageId>
-    <Version>1.0.0</Version>
     <Authors>Carpe Diem Systems</Authors>
     <Company>Carpe Diem Systems</Company>
     <Description>A zero-dependency fluent API for generating self-contained HTML reports with tables, SVG charts, KPI cards, progress bars, and more. No JavaScript, no external CSS — just clean HTML you can open in any browser, email, or print to PDF.</Description>
@@ -19,7 +18,14 @@
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- MinVer: version derived from git tags (e.g. git tag 1.0.0) -->
+    <MinVerMinimumMajorMinor>1.0</MinVerMinimumMajorMinor>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="7.0.0" PrivateAssets="All" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\README.md" Pack="true" PackagePath="\" />
