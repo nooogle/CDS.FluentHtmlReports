@@ -1,17 +1,17 @@
 using System.Text;
+using static CDS.FluentHtmlReports.HtmlHelpers;
 
 namespace CDS.FluentHtmlReports;
 
 /// <summary>
-/// Renders text-based HTML elements (headings, paragraphs, metadata, lines).
+/// Renders text-based HTML elements (headings, paragraphs, metadata, lines,
+/// lists, alerts, code blocks, badges, links, definitions, progress bars, KPI cards, and footers).
 /// </summary>
 internal class TextRenderer(StringBuilder _html)
 {
     /// <summary>
     /// Appends an HTML heading element at the specified level.
     /// </summary>
-    /// <param name="title">The heading text.</param>
-    /// <param name="level">The heading level.</param>
     internal void AddHeading(string title, HeadingLevel level)
     {
         int tag = (int)level;
@@ -21,7 +21,6 @@ internal class TextRenderer(StringBuilder _html)
     /// <summary>
     /// Appends a paragraph element.
     /// </summary>
-    /// <param name="text">The paragraph content.</param>
     internal void AddParagraph(string text)
     {
         _html.AppendLine($"<p>{text}</p>");
@@ -30,8 +29,6 @@ internal class TextRenderer(StringBuilder _html)
     /// <summary>
     /// Appends a single label/value metadata line.
     /// </summary>
-    /// <param name="label">The bold label text.</param>
-    /// <param name="value">The value text.</param>
     internal void AddMetadata(string label, string value)
     {
         _html.AppendLine($"<div class=\"metadata\"><span><strong>{label}:</strong> {value}</span></div>");
@@ -40,7 +37,6 @@ internal class TextRenderer(StringBuilder _html)
     /// <summary>
     /// Appends raw HTML content.
     /// </summary>
-    /// <param name="htmlContent">The raw HTML string to insert.</param>
     internal void AddHtml(string htmlContent)
     {
         _html.AppendLine(htmlContent);
@@ -49,7 +45,6 @@ internal class TextRenderer(StringBuilder _html)
     /// <summary>
     /// Appends a row of inline label/value pairs.
     /// </summary>
-    /// <param name="values">The label/value pairs to render.</param>
     internal void AddLabelValueRow(IEnumerable<(string, string)> values)
     {
         if (values == null) { return; }
@@ -65,7 +60,6 @@ internal class TextRenderer(StringBuilder _html)
     /// <summary>
     /// Appends a visual separator line of the specified style.
     /// </summary>
-    /// <param name="lineType">The line style.</param>
     internal void AddLine(LineType lineType)
     {
         switch (lineType)
@@ -83,5 +77,207 @@ internal class TextRenderer(StringBuilder _html)
                 _html.AppendLine("<hr style=\"border: none; border-top: 1px dotted #dee2e6; margin: 20px 0;\" />");
                 break;
         }
+    }
+
+    /// <summary>
+    /// Appends an unordered (bullet) list.
+    /// </summary>
+    internal void AddUnorderedList(IEnumerable<string> items)
+    {
+        if (items == null) { return; }
+        _html.AppendLine("<ul>");
+        foreach (var item in items)
+        {
+            _html.AppendLine($"<li>{Enc(item)}</li>");
+        }
+        _html.AppendLine("</ul>");
+    }
+
+    /// <summary>
+    /// Appends an ordered (numbered) list.
+    /// </summary>
+    internal void AddOrderedList(IEnumerable<string> items)
+    {
+        if (items == null) { return; }
+        _html.AppendLine("<ol>");
+        foreach (var item in items)
+        {
+            _html.AppendLine($"<li>{Enc(item)}</li>");
+        }
+        _html.AppendLine("</ol>");
+    }
+
+    /// <summary>
+    /// Appends a styled alert/callout box.
+    /// </summary>
+    internal void AddAlert(AlertLevel level, string message)
+    {
+        var (bg, border, icon) = level switch
+        {
+            AlertLevel.Info    => ("#e3f2fd", "#1976D2", "\u2139\uFE0F"),
+            AlertLevel.Success => ("#e8f5e9", "#4CAF50", "\u2705"),
+            AlertLevel.Warning => ("#fff8e1", "#FF9800", "\u26A0\uFE0F"),
+            AlertLevel.Error   => ("#ffebee", "#F44336", "\u274C"),
+            _                  => ("#e3f2fd", "#1976D2", "\u2139\uFE0F")
+        };
+
+        _html.AppendLine($"<div class=\"alert\" style=\"background:{bg}; border-left:4px solid {border};\">");
+        _html.AppendLine($"<span class=\"alert-icon\">{icon}</span> {Enc(message)}");
+        _html.AppendLine("</div>");
+    }
+
+    /// <summary>
+    /// Appends a page break marker for print output.
+    /// </summary>
+    internal void AddPageBreak()
+    {
+        _html.AppendLine("<div style=\"page-break-before: always;\"></div>");
+    }
+
+    /// <summary>
+    /// Appends a preformatted code block.
+    /// </summary>
+    internal void AddCodeBlock(string code, string? language = null)
+    {
+        var langClass = string.IsNullOrEmpty(language) ? "" : $" class=\"language-{Enc(language)}\"";
+        _html.AppendLine($"<pre class=\"code-block\"><code{langClass}>{Enc(code)}</code></pre>");
+    }
+
+    /// <summary>
+    /// Appends a small colored badge/label.
+    /// </summary>
+    internal void AddBadge(string text, string color)
+    {
+        _html.AppendLine($"<span class=\"badge\" style=\"background:{Enc(color)};\">{Enc(text)}</span>");
+    }
+
+    /// <summary>
+    /// Appends a hyperlink.
+    /// </summary>
+    internal void AddLink(string text, string url)
+    {
+        _html.AppendLine($"<p><a class=\"report-link\" href=\"{Enc(url)}\">{Enc(text)}</a></p>");
+    }
+
+    /// <summary>
+    /// Appends a definition list of term/definition pairs.
+    /// </summary>
+    internal void AddDefinitionList(IEnumerable<(string term, string definition)> items)
+    {
+        if (items == null) { return; }
+        _html.AppendLine("<dl class=\"definition-list\">");
+        foreach (var (term, definition) in items)
+        {
+            _html.AppendLine($"<dt>{Enc(term)}</dt>");
+            _html.AppendLine($"<dd>{Enc(definition)}</dd>");
+        }
+        _html.AppendLine("</dl>");
+    }
+
+    /// <summary>
+    /// Appends a progress bar.
+    /// </summary>
+    internal void AddProgressBar(string label, int value, int max = 100, string? suffix = null)
+    {
+        int percent = max > 0 ? Math.Clamp(value * 100 / max, 0, 100) : 0;
+        string barColor = percent >= 80 ? "#4CAF50" : percent >= 50 ? "#FF9800" : "#F44336";
+        string displayValue = suffix != null ? $"{value}{suffix}" : $"{value}/{max}";
+
+        _html.AppendLine("<div class=\"progress-container\">");
+        _html.AppendLine($"<div class=\"progress-label\"><strong>{Enc(label)}</strong> <span>{Enc(displayValue)}</span></div>");
+        _html.AppendLine("<div class=\"progress-bar-bg\">");
+        _html.AppendLine($"<div class=\"progress-bar-fill\" style=\"width:{percent}%; background:{barColor};\"></div>");
+        _html.AppendLine("</div>");
+        _html.AppendLine("</div>");
+    }
+
+    /// <summary>
+    /// Appends a row of KPI summary cards.
+    /// </summary>
+    internal void AddKpiCards(IEnumerable<(string label, string value)> cards)
+    {
+        if (cards == null) { return; }
+        _html.AppendLine("<div class=\"kpi-row\">");
+        foreach (var (label, value) in cards)
+        {
+            _html.AppendLine("<div class=\"kpi-card\">");
+            _html.AppendLine($"<div class=\"kpi-value\">{Enc(value)}</div>");
+            _html.AppendLine($"<div class=\"kpi-label\">{Enc(label)}</div>");
+            _html.AppendLine("</div>");
+        }
+        _html.AppendLine("</div>");
+    }
+
+    /// <summary>
+    /// Appends a footer with optional custom text. Uses a timestamp if no text is provided.
+    /// </summary>
+    internal void AddFooter(string? text = null)
+    {
+        var content = text ?? $"Generated on {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
+        // Support {timestamp} token replacement
+        content = content.Replace("{timestamp}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+        _html.AppendLine($"<footer class=\"report-footer\">{Enc(content)}</footer>");
+    }
+
+    /// <summary>
+    /// Appends a base64-encoded image.
+    /// </summary>
+    internal void AddImage(byte[] imageData, string mimeType, string? alt = null)
+    {
+        var base64 = Convert.ToBase64String(imageData);
+        var altAttr = alt != null ? $" alt=\"{Enc(alt)}\"" : "";
+        _html.AppendLine($"<div class=\"image-container\"><img src=\"data:{Enc(mimeType)};base64,{base64}\"{altAttr} /></div>");
+    }
+
+    /// <summary>
+    /// Opens a collapsible section.
+    /// </summary>
+    internal void BeginCollapsible(string title, bool expanded)
+    {
+        var openAttr = expanded ? " open" : "";
+        _html.AppendLine($"<details class=\"collapsible\"{openAttr}>");
+        _html.AppendLine($"<summary>{Enc(title)}</summary>");
+        _html.AppendLine("<div class=\"collapsible-content\">");
+    }
+
+    /// <summary>
+    /// Closes a collapsible section.
+    /// </summary>
+    internal void EndCollapsible()
+    {
+        _html.AppendLine("</div>");
+        _html.AppendLine("</details>");
+    }
+
+    /// <summary>
+    /// Opens a multi-column flex layout.
+    /// </summary>
+    internal void BeginColumns()
+    {
+        _html.AppendLine("<div class=\"columns-row\">");
+    }
+
+    /// <summary>
+    /// Opens an individual column within a columns layout.
+    /// </summary>
+    internal void BeginColumn()
+    {
+        _html.AppendLine("<div class=\"column\">");
+    }
+
+    /// <summary>
+    /// Closes an individual column.
+    /// </summary>
+    internal void EndColumn()
+    {
+        _html.AppendLine("</div>");
+    }
+
+    /// <summary>
+    /// Closes a multi-column flex layout.
+    /// </summary>
+    internal void EndColumns()
+    {
+        _html.AppendLine("</div>");
     }
 }
