@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Features Demo</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+    }
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 30px;
+        background: #fff;
+    }
+    h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        color: #1a1a1a;
+        border-bottom: 3px solid #1976D2;
+        padding-bottom: 8px;
+    }
+    h2 {
+        font-size: 18px;
+        margin: 30px 0 12px;
+        color: #1976D2;
+    }
+    h3 { font-size: 16px; margin: 20px 0 8px; color: #333; }
+    h4 { font-size: 14px; margin: 16px 0 6px; color: #555; }
+    h5 { font-size: 13px; margin: 14px 0 4px; color: #666; }
+    h6 { font-size: 12px; margin: 12px 0 4px; color: #888; }
+    p { margin-bottom: 12px; font-size: 14px; }
+    .metadata {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 6px;
+    }
+    .metadata span {
+        display: inline-block;
+        margin-right: 24px;
+    }
+    .metadata-section {
+        margin-bottom: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    th, td {
+        padding: 8px 12px;
+        border: 1px solid #dee2e6;
+        text-align: center;
+    }
+    th {
+        background: #f1f3f5;
+        font-weight: 600;
+    }
+    .row-header {
+        background: #f1f3f5;
+        font-weight: 600;
+        text-align: left;
+    }
+    .confusion-match {
+        background: #C8E6C9;
+        font-weight: 600;
+    }
+    .confusion-mismatch {
+        background: #FFCDD2;
+    }
+    .confusion-zero {
+        background: #fff;
+        color: #ccc;
+    }
+    .total-row td {
+        background: #f8f9fa;
+        font-weight: 600;
+        border-top: 2px solid #999;
+    }
+    .total-col {
+        background: #f8f9fa;
+        font-weight: 600;
+    }
+    .kv-table td:first-child {
+        text-align: left;
+    }
+    .kv-table td:last-child {
+        text-align: left;
+    }
+    .correctness-rates {
+        margin-top: 8px;
+        margin-bottom: 24px;
+    }
+    .chart-container {
+        margin: 12px 0 30px;
+    }
+    svg text {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Lists */
+    ul, ol {
+        margin: 10px 0 16px 28px;
+        font-size: 14px;
+    }
+    li {
+        margin-bottom: 4px;
+    }
+
+    /* Alerts */
+    .alert {
+        padding: 12px 16px;
+        margin: 12px 0;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    .alert-icon {
+        margin-right: 6px;
+    }
+
+    /* Code blocks */
+    .code-block {
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 14px 16px;
+        margin: 12px 0;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        overflow-x: auto;
+        white-space: pre;
+    }
+
+    /* Badges */
+    .badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        margin: 2px 4px 2px 0;
+    }
+
+    /* Links */
+    .report-link {
+        color: #1976D2;
+        text-decoration: none;
+        font-size: 14px;
+        border-bottom: 1px solid transparent;
+    }
+    .report-link:hover {
+        border-bottom-color: #1976D2;
+    }
+
+    /* Definition lists */
+    .definition-list {
+        margin: 10px 0 16px;
+        font-size: 14px;
+    }
+    .definition-list dt {
+        font-weight: 600;
+        color: #333;
+        margin-top: 8px;
+    }
+    .definition-list dd {
+        margin-left: 20px;
+        color: #555;
+    }
+
+    /* Progress bars */
+    .progress-container {
+        margin: 10px 0;
+    }
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+    .progress-bar-bg {
+        background: #e9ecef;
+        border-radius: 6px;
+        height: 18px;
+        overflow: hidden;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        border-radius: 6px;
+        transition: width 0.3s;
+    }
+
+    /* KPI cards */
+    .kpi-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin: 16px 0 20px;
+    }
+    .kpi-card {
+        flex: 1;
+        min-width: 140px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 16px 20px;
+        text-align: center;
+    }
+    .kpi-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1976D2;
+        line-height: 1.2;
+    }
+    .kpi-label {
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Footer */
+    .report-footer {
+        margin-top: 40px;
+        padding-top: 12px;
+        border-top: 1px solid #dee2e6;
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
+
+    /* Collapsible sections */
+    .collapsible {
+        margin: 12px 0;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+    .collapsible summary {
+        padding: 10px 16px;
+        background: #f8f9fa;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+    .collapsible[open] summary {
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 4px 4px 0 0;
+    }
+    .collapsible-content {
+        padding: 16px;
+    }
+
+    /* Columns layout */
+    .columns-row {
+        display: flex;
+        gap: 24px;
+        margin: 12px 0;
+    }
+    .column {
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* Image container */
+    .image-container {
+        margin: 12px 0;
+        text-align: center;
+    }
+    .image-container img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    @media print {
+        body { background: #fff; }
+        .container { padding: 0; max-width: 100%; }
+        .collapsible { border: none; }
+        .collapsible summary { display: none; }
+        .collapsible-content { padding: 0; }
+        .kpi-card { border: 1px solid #ccc; }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Text Features Demo</h1>
+<h2>Heading Levels</h2>
+<p>The library supports all six HTML heading levels for document structure.</p>
+<h2>Heading 2 (H2)</h2>
+<h3>Heading 3 (H3)</h3>
+<h4>Heading 4 (H4)</h4>
+<h5>Heading 5 (H5)</h5>
+<h6>Heading 6 (H6)</h6>
+<hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;" />
+<h2>Paragraphs & Metadata</h2>
+<p>This is a standard paragraph. It can contain any text content and will be rendered with consistent spacing and font sizing.</p>
+<div class="metadata"><span><strong>Author:</strong> CDS FluentHtmlReports</span></div>
+<div class="metadata"><span><strong>Version:</strong> 2.0.0</span></div>
+<div class="metadata">
+<span><strong>User:</strong> jon</span>
+<span><strong>Machine:</strong> JONSHADFORT0D6F</span>
+<span><strong>OS:</strong> Microsoft Windows NT 10.0.26200.0</span>
+</div>
+<hr style="border: none; border-top: 1px dashed #dee2e6; margin: 20px 0;" />
+<h2>Bullet Lists</h2>
+<p>Unordered lists are great for feature summaries, checklists, and notes:</p>
+<ul>
+<li>Passed all validation checks</li>
+<li>Exported 1,204 rows to CSV</li>
+<li>No duplicate records found</li>
+<li>Processing completed in 3.2 seconds</li>
+</ul>
+<h2>Numbered Lists</h2>
+<p>Ordered lists work well for step-by-step procedures:</p>
+<ol>
+<li>Connect to the source database</li>
+<li>Run schema migration scripts</li>
+<li>Validate foreign key constraints</li>
+<li>Export reconciliation report</li>
+<li>Notify stakeholders via email</li>
+</ol>
+<hr style="border: none; border-top: 1px dashed #dee2e6; margin: 20px 0;" />
+<h2>Alert Boxes</h2>
+<p>Four severity levels for callout/notification boxes:</p>
+<div class="alert alert-info" style="background:#e3f2fd; border-left:4px solid #1976D2;">
+<span class="alert-icon">ℹ️</span> This is an informational message. Use it for general notes and context.
+</div>
+<div class="alert alert-success" style="background:#e8f5e9; border-left:4px solid #4CAF50;">
+<span class="alert-icon">✅</span> All 1,204 records were processed successfully with no errors.
+</div>
+<div class="alert alert-warning" style="background:#fff8e1; border-left:4px solid #FF9800;">
+<span class="alert-icon">⚠️</span> 3 records had missing postal codes. Default values were applied.
+</div>
+<div class="alert alert-error" style="background:#ffebee; border-left:4px solid #F44336;">
+<span class="alert-icon">❌</span> Database connection timed out after 5 retry attempts. Please check connectivity.
+</div>
+<hr style="border: none; border-top: 1px dashed #dee2e6; margin: 20px 0;" />
+<h2>Code Blocks</h2>
+<p>Preformatted code blocks with monospace font — ideal for SQL, config, or stack traces:</p>
+<pre class="code-block"><code class="language-sql">SELECT o.OrderId, c.CustomerName, o.Total
+FROM Orders o
+INNER JOIN Customers c ON o.CustomerId = c.Id
+WHERE o.Status = &#39;Pending&#39;
+ORDER BY o.CreatedDate DESC;</code></pre>
+<p>Plain text code block (no language specified):</p>
+<pre class="code-block"><code>[2024-06-15 14:32:01] INFO  Application started
+[2024-06-15 14:32:02] INFO  Connected to database (prod-db-03)
+[2024-06-15 14:32:02] WARN  Slow query detected (1.2s)
+[2024-06-15 14:32:05] ERROR Connection reset by peer</code></pre>
+<hr style="border: none; border-top: 1px dashed #dee2e6; margin: 20px 0;" />
+<h2>Badges</h2>
+<p>Small colored labels for status indicators:</p>
+<span class="badge" style="background:#4CAF50;">PASS</span>
+<span class="badge" style="background:#F44336;">FAIL</span>
+<span class="badge" style="background:#FF9800;">PENDING</span>
+<span class="badge" style="background:#9E9E9E;">SKIPPED</span>
+<span class="badge" style="background:#9C27B0;">CRITICAL</span>
+<hr style="border: none; border-top: 1px dashed #dee2e6; margin: 20px 0;" />
+<h2>Links</h2>
+<p>Simple hyperlinks for navigation between reports or to external resources:</p>
+<p><a class="report-link" href="https://example.com/docs">View the full documentation</a></p>
+<p><a class="report-link" href="https://example.com/data.csv">Download raw data (CSV)</a></p>
+<hr style="border: none; border-top: 1px dashed #dee2e6; margin: 20px 0;" />
+<h2>Definition Lists</h2>
+<p>Structured term/definition pairs for configuration or glossary entries:</p>
+<dl class="definition-list">
+<dt>Environment</dt>
+<dd>Production (us-east-1)</dd>
+<dt>Database</dt>
+<dd>PostgreSQL 15.3</dd>
+<dt>Connection Pool</dt>
+<dd>Min: 5, Max: 100</dd>
+<dt>Timeout</dt>
+<dd>30 seconds</dd>
+<dt>SSL</dt>
+<dd>Enabled (TLS 1.3)</dd>
+</dl>
+<hr style="border: none; border-top: 1px dashed #dee2e6; margin: 20px 0;" />
+<h2>Separator Lines</h2>
+<p>Four line styles for visual structure:</p>
+<p>Solid:</p>
+<hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;" />
+<p>Dashed:</p>
+<hr style="border: none; border-top: 1px dashed #dee2e6; margin: 20px 0;" />
+<p>Dotted:</p>
+<hr style="border: none; border-top: 1px dotted #dee2e6; margin: 20px 0;" />
+<p>Blank (invisible spacer):</p>
+<div style="height: 20px;"></div>
+<p>(the blank line added a 20px gap above this paragraph)</p>
+<footer class="report-footer">Generated on 2026-02-17 16:49:10</footer>
+</div>
+</body>
+</html>

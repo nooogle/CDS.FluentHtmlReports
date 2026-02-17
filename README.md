@@ -91,61 +91,6 @@ The code above generates a professional HTML report. Here's a preview of the out
 
 ![Example Report](docs/images/example-report.png)
 
-<details>
-<summary>📄 View as markdown approximation</summary>
-
----
-
-<div align="center">
-
-# **Weekly Team Report**
-
-</div>
-
-Here's a quick overview of this week's progress for the development team.
-
-**Week Ending:** Feb 17, 2026  ·  **Team:** Engineering  ·  **Sprint:** Sprint 24
-
----
-
-#### Team Summary
-
-<table>
-<tr>
-<td align="center"><b>73</b><br><sub>Total Tasks</sub></td>
-<td align="center"><b>68</b><br><sub>Completed</sub></td>
-<td align="center"><b>5</b><br><sub>In Progress</sub></td>
-<td align="center"><b>93%</b><br><sub>Success Rate</sub></td>
-</tr>
-</table>
-
----
-
-#### Team Members
-
-| Name | Role | TasksCompleted | Status |
-|------|------|----------------|--------|
-| Alice Johnson | Backend | 23 | Active |
-| Bob Smith | Frontend | 19 | Active |
-| Carol White | QA | 31 | Active |
-
----
-
-#### Task Completion by Role
-
-```
-QA         ████████████████████████████████ 31
-Backend    ██████████████████████ 23
-Frontend   ██████████████████ 19
-```
-
----
-
-> ✅ **Success:** All sprint goals achieved! Great work team! 🎉
-
-<div align="center">
-<sub>Generated with CDS.FluentHtmlReports — 2026-02-17 14:30:45</sub>
-</div>
 
 ---
 
@@ -157,7 +102,18 @@ Frontend   ██████████████████ 19
 - 🎨 Color-coded alerts, progress bars, and KPI cards
 - 📦 Single self-contained file — no external dependencies
 
-</details>
+
+---
+
+### Demo Reports Produced by `ConsoleTest`
+
+- [Quick Start](docs/html_demo_reports/00-quick-start.html)
+- [Text Features](docs/html_demo_reports/01-text-features.html)
+- [Table Features](docs/html_demo_reports/02-table-features.html)
+- [Chart Features](docs/html_demo_reports/03-chart-features.html)
+- [Layout Features](docs/html_demo_reports/04-layout-features.html)
+- [All Features](docs/html_demo_reports/05-all-features.html)
+
 
 ## Features
 
@@ -288,14 +244,8 @@ dotnet pack -c Release
 
 The `.nupkg` will be in `CDS.FluentHtmlReports/bin/Release/`.
 
-## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-feature`)
-3. Make your changes — follow the coding guidelines in `.github/copilot-instructions.md`
-4. Ensure `dotnet build` succeeds
-5. Submit a pull request
 
 ## License
 
-[MIT](LICENSE.txt) © Carpe Diem Systems
+[MIT](LICENSE.txt) © 2026 Carpe Diem Systems

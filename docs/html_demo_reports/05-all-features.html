@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CDS.FluentHtmlReports — Complete Feature Showcase</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+    }
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 30px;
+        background: #fff;
+    }
+    h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        color: #1a1a1a;
+        border-bottom: 3px solid #1976D2;
+        padding-bottom: 8px;
+    }
+    h2 {
+        font-size: 18px;
+        margin: 30px 0 12px;
+        color: #1976D2;
+    }
+    h3 { font-size: 16px; margin: 20px 0 8px; color: #333; }
+    h4 { font-size: 14px; margin: 16px 0 6px; color: #555; }
+    h5 { font-size: 13px; margin: 14px 0 4px; color: #666; }
+    h6 { font-size: 12px; margin: 12px 0 4px; color: #888; }
+    p { margin-bottom: 12px; font-size: 14px; }
+    .metadata {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 6px;
+    }
+    .metadata span {
+        display: inline-block;
+        margin-right: 24px;
+    }
+    .metadata-section {
+        margin-bottom: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    th, td {
+        padding: 8px 12px;
+        border: 1px solid #dee2e6;
+        text-align: center;
+    }
+    th {
+        background: #f1f3f5;
+        font-weight: 600;
+    }
+    .row-header {
+        background: #f1f3f5;
+        font-weight: 600;
+        text-align: left;
+    }
+    .confusion-match {
+        background: #C8E6C9;
+        font-weight: 600;
+    }
+    .confusion-mismatch {
+        background: #FFCDD2;
+    }
+    .confusion-zero {
+        background: #fff;
+        color: #ccc;
+    }
+    .total-row td {
+        background: #f8f9fa;
+        font-weight: 600;
+        border-top: 2px solid #999;
+    }
+    .total-col {
+        background: #f8f9fa;
+        font-weight: 600;
+    }
+    .kv-table td:first-child {
+        text-align: left;
+    }
+    .kv-table td:last-child {
+        text-align: left;
+    }
+    .correctness-rates {
+        margin-top: 8px;
+        margin-bottom: 24px;
+    }
+    .chart-container {
+        margin: 12px 0 30px;
+    }
+    svg text {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Lists */
+    ul, ol {
+        margin: 10px 0 16px 28px;
+        font-size: 14px;
+    }
+    li {
+        margin-bottom: 4px;
+    }
+
+    /* Alerts */
+    .alert {
+        padding: 12px 16px;
+        margin: 12px 0;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    .alert-icon {
+        margin-right: 6px;
+    }
+
+    /* Code blocks */
+    .code-block {
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 14px 16px;
+        margin: 12px 0;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        overflow-x: auto;
+        white-space: pre;
+    }
+
+    /* Badges */
+    .badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        margin: 2px 4px 2px 0;
+    }
+
+    /* Links */
+    .report-link {
+        color: #1976D2;
+        text-decoration: none;
+        font-size: 14px;
+        border-bottom: 1px solid transparent;
+    }
+    .report-link:hover {
+        border-bottom-color: #1976D2;
+    }
+
+    /* Definition lists */
+    .definition-list {
+        margin: 10px 0 16px;
+        font-size: 14px;
+    }
+    .definition-list dt {
+        font-weight: 600;
+        color: #333;
+        margin-top: 8px;
+    }
+    .definition-list dd {
+        margin-left: 20px;
+        color: #555;
+    }
+
+    /* Progress bars */
+    .progress-container {
+        margin: 10px 0;
+    }
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+    .progress-bar-bg {
+        background: #e9ecef;
+        border-radius: 6px;
+        height: 18px;
+        overflow: hidden;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        border-radius: 6px;
+        transition: width 0.3s;
+    }
+
+    /* KPI cards */
+    .kpi-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin: 16px 0 20px;
+    }
+    .kpi-card {
+        flex: 1;
+        min-width: 140px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 16px 20px;
+        text-align: center;
+    }
+    .kpi-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1976D2;
+        line-height: 1.2;
+    }
+    .kpi-label {
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Footer */
+    .report-footer {
+        margin-top: 40px;
+        padding-top: 12px;
+        border-top: 1px solid #dee2e6;
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
+
+    /* Collapsible sections */
+    .collapsible {
+        margin: 12px 0;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+    .collapsible summary {
+        padding: 10px 16px;
+        background: #f8f9fa;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+    .collapsible[open] summary {
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 4px 4px 0 0;
+    }
+    .collapsible-content {
+        padding: 16px;
+    }
+
+    /* Columns layout */
+    .columns-row {
+        display: flex;
+        gap: 24px;
+        margin: 12px 0;
+    }
+    .column {
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* Image container */
+    .image-container {
+        margin: 12px 0;
+        text-align: center;
+    }
+    .image-container img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    @media print {
+        body { background: #fff; }
+        .container { padding: 0; max-width: 100%; }
+        .collapsible { border: none; }
+        .collapsible summary { display: none; }
+        .collapsible-content { padding: 0; }
+        .kpi-card { border: 1px solid #ccc; }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>CDS.FluentHtmlReports — Complete Feature Showcase</h1>
+<p>This report demonstrates every feature available in the library, assembled into a realistic scenario: a nightly build and test pipeline summary.</p>
+<div class="metadata">
+<span><strong>Pipeline:</strong> nightly-build-2024-06-15</span>
+<span><strong>Branch:</strong> main</span>
+<span><strong>Commit:</strong> a3f7c2d</span>
+</div>
+<div style="height: 20px;"></div>
+<div class="kpi-row">
+<div class="kpi-card">
+<div class="kpi-value">1,247</div>
+<div class="kpi-label">Total Tests</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">1,198</div>
+<div class="kpi-label">Passed</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">42</div>
+<div class="kpi-label">Failed</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">7</div>
+<div class="kpi-label">Skipped</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">04:12</div>
+<div class="kpi-label">Duration</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">87%</div>
+<div class="kpi-label">Coverage</div>
+</div>
+</div>
+<div class="alert alert-warning" style="background:#fff8e1; border-left:4px solid #FF9800;">
+<span class="alert-icon">⚠️</span> 42 test failures detected — review the breakdown below.
+</div>
+<hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;" />
+<h2>Results Overview</h2>
+<div class="columns-row">
+<div class="column">
+<h2>Test Outcomes</h2>
+<div class="chart-container" style="max-width:900px; text-align: left;">
+<svg viewBox="0 0 900 376" width="100%" preserveAspectRatio="xMinYMin meet" xmlns="http://www.w3.org/2000/svg">
+<path d="M 140.0 150.0 L 140.0 30.0 A 120.0 120.0 0 1 1 110.7 33.6 Z" fill="#4CAF50" stroke="#fff" stroke-width="2" />
+<path d="M 140.0 150.0 L 110.7 33.6 A 120.0 120.0 0 0 1 135.8 30.1 Z" fill="#F44336" stroke="#fff" stroke-width="2" />
+<path d="M 140.0 150.0 L 135.8 30.1 A 120.0 120.0 0 0 1 140.0 30.0 Z" fill="#9E9E9E" stroke="#fff" stroke-width="2" />
+<rect x="10" y="300.0" width="14" height="14" fill="#4CAF50" rx="2" />
+<text x="30" y="312.0" font-size="13" fill="#333">Passed (1198 — 96%)</text>
+<rect x="10" y="322.0" width="14" height="14" fill="#F44336" rx="2" />
+<text x="30" y="334.0" font-size="13" fill="#333">Failed (42 — 3%)</text>
+<rect x="10" y="344.0" width="14" height="14" fill="#9E9E9E" rx="2" />
+<text x="30" y="356.0" font-size="13" fill="#333">Skipped (7 — 1%)</text>
+</svg>
+</div>
+</div>
+<div class="column">
+<h2>Coverage by Module</h2>
+<div class="chart-container" style="max-width:900px; text-align: left;">
+<svg viewBox="0 0 900 398" width="100%" preserveAspectRatio="xMinYMin meet" xmlns="http://www.w3.org/2000/svg">
+<path d="M 140.0 30.0 A 120.0 120.0 0 0 1 258.8 166.9 L 205.3 159.3 A 66.0 66.0 0 0 0 140.0 84.0 Z" fill="#4CAF50" stroke="#fff" stroke-width="2" />
+<path d="M 258.8 166.9 A 120.0 120.0 0 0 1 119.3 268.2 L 128.6 215.0 A 66.0 66.0 0 0 0 205.3 159.3 Z" fill="#2196F3" stroke="#fff" stroke-width="2" />
+<path d="M 119.3 268.2 A 120.0 120.0 0 0 1 20.4 160.4 L 74.2 155.7 A 66.0 66.0 0 0 0 128.6 215.0 Z" fill="#FF9800" stroke="#fff" stroke-width="2" />
+<path d="M 20.4 160.4 A 120.0 120.0 0 0 1 140.0 30.0 L 140.0 84.0 A 66.0 66.0 0 0 0 74.2 155.7 Z" fill="#9C27B0" stroke="#fff" stroke-width="2" />
+<rect x="10" y="300.0" width="14" height="14" fill="#4CAF50" rx="2" />
+<text x="30" y="312.0" font-size="13" fill="#333">Core (94 — 27%)</text>
+<rect x="10" y="322.0" width="14" height="14" fill="#2196F3" rx="2" />
+<text x="30" y="334.0" font-size="13" fill="#333">API (88 — 26%)</text>
+<rect x="10" y="344.0" width="14" height="14" fill="#FF9800" rx="2" />
+<text x="30" y="356.0" font-size="13" fill="#333">UI (72 — 21%)</text>
+<rect x="10" y="366.0" width="14" height="14" fill="#9C27B0" rx="2" />
+<text x="30" y="378.0" font-size="13" fill="#333">Data (91 — 26%)</text>
+</svg>
+</div>
+</div>
+</div>
+<h2>Failure Trend (Last 10 Builds)</h2>
+<h2>Test Failures Over Time</h2>
+<div class="chart-container" style="max-width:900px; text-align: left;">
+<svg viewBox="0 0 900 334" width="100%" height="334" preserveAspectRatio="xMinYMin meet" xmlns="http://www.w3.org/2000/svg">
+<line x1="60" y1="230" x2="880" y2="230" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="234" text-anchor="end" font-size="11" fill="#888">0</text>
+<line x1="60" y1="180" x2="880" y2="180" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="184" text-anchor="end" font-size="11" fill="#888">7</text>
+<line x1="60" y1="130" x2="880" y2="130" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="134" text-anchor="end" font-size="11" fill="#888">14</text>
+<line x1="60" y1="80" x2="880" y2="80" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="84" text-anchor="end" font-size="11" fill="#888">21</text>
+<line x1="60" y1="30" x2="880" y2="30" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="34" text-anchor="end" font-size="11" fill="#888">28</text>
+<line x1="60" y1="30" x2="60" y2="230" stroke="#999" stroke-width="1" />
+<line x1="60" y1="230" x2="880" y2="230" stroke="#999" stroke-width="1" />
+<text x="60" y="252" text-anchor="middle" font-size="11" fill="#888">Build 91</text>
+<text x="151" y="252" text-anchor="middle" font-size="11" fill="#888">Build 92</text>
+<text x="242" y="252" text-anchor="middle" font-size="11" fill="#888">Build 93</text>
+<text x="333" y="252" text-anchor="middle" font-size="11" fill="#888">Build 94</text>
+<text x="424" y="252" text-anchor="middle" font-size="11" fill="#888">Build 95</text>
+<text x="515" y="252" text-anchor="middle" font-size="11" fill="#888">Build 96</text>
+<text x="606" y="252" text-anchor="middle" font-size="11" fill="#888">Build 97</text>
+<text x="697" y="252" text-anchor="middle" font-size="11" fill="#888">Build 98</text>
+<text x="788" y="252" text-anchor="middle" font-size="11" fill="#888">Build 99</text>
+<text x="880" y="252" text-anchor="middle" font-size="11" fill="#888">Build 100</text>
+<polyline points="60,216 151,195 242,209 333,173 424,202 515,145 606,188 697,123 788,159 880,30" fill="none" stroke="#4CAF50" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+<circle cx="60" cy="216" r="3.5" fill="#4CAF50" stroke="#fff" stroke-width="1.5" />
+<circle cx="151" cy="195" r="3.5" fill="#4CAF50" stroke="#fff" stroke-width="1.5" />
+<circle cx="242" cy="209" r="3.5" fill="#4CAF50" stroke="#fff" stroke-width="1.5" />
+<circle cx="333" cy="173" r="3.5" fill="#4CAF50" stroke="#fff" stroke-width="1.5" />
+<circle cx="424" cy="202" r="3.5" fill="#4CAF50" stroke="#fff" stroke-width="1.5" />
+<circle cx="515" cy="145" r="3.5" fill="#4CAF50" stroke="#fff" stroke-width="1.5" />
+<circle cx="606" cy="188" r="3.5" fill="#4CAF50" stroke="#fff" stroke-width="1.5" />
+<circle cx="697" cy="123" r="3.5" fill="#4CAF50" stroke="#fff" stroke-width="1.5" />
+<circle cx="788" cy="159" r="3.5" fill="#4CAF50" stroke="#fff" stroke-width="1.5" />
+<circle cx="880" cy="30" r="3.5" fill="#4CAF50" stroke="#fff" stroke-width="1.5" />
+<polyline points="60,223 151,230 242,216 333,223 424,209 515,216 606,195 697,209 788,173 880,130" fill="none" stroke="#2196F3" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+<circle cx="60" cy="223" r="3.5" fill="#2196F3" stroke="#fff" stroke-width="1.5" />
+<circle cx="151" cy="230" r="3.5" fill="#2196F3" stroke="#fff" stroke-width="1.5" />
+<circle cx="242" cy="216" r="3.5" fill="#2196F3" stroke="#fff" stroke-width="1.5" />
+<circle cx="333" cy="223" r="3.5" fill="#2196F3" stroke="#fff" stroke-width="1.5" />
+<circle cx="424" cy="209" r="3.5" fill="#2196F3" stroke="#fff" stroke-width="1.5" />
+<circle cx="515" cy="216" r="3.5" fill="#2196F3" stroke="#fff" stroke-width="1.5" />
+<circle cx="606" cy="195" r="3.5" fill="#2196F3" stroke="#fff" stroke-width="1.5" />
+<circle cx="697" cy="209" r="3.5" fill="#2196F3" stroke="#fff" stroke-width="1.5" />
+<circle cx="788" cy="173" r="3.5" fill="#2196F3" stroke="#fff" stroke-width="1.5" />
+<circle cx="880" cy="130" r="3.5" fill="#2196F3" stroke="#fff" stroke-width="1.5" />
+<line x1="10" y1="292.0" x2="24" y2="292.0" stroke="#4CAF50" stroke-width="3" />
+<circle cx="17" cy="292.0" r="3.5" fill="#4CAF50" />
+<text x="30" y="297.0" font-size="13" fill="#333">Unit Tests</text>
+<line x1="10" y1="314.0" x2="24" y2="314.0" stroke="#2196F3" stroke-width="3" />
+<circle cx="17" cy="314.0" r="3.5" fill="#2196F3" />
+<text x="30" y="319.0" font-size="13" fill="#333">Integration</text>
+</svg>
+</div>
+<h2>Failures by Module</h2>
+<h2>Module Failure Count</h2>
+<div class="chart-container" style="max-width:900px; text-align: left;">
+<svg viewBox="0 0 900 280" width="100%" height="280" preserveAspectRatio="xMinYMin meet" xmlns="http://www.w3.org/2000/svg">
+<line x1="120" y1="30" x2="120" y2="250" stroke="#e0e0e0" stroke-width="1" />
+<text x="120" y="268" text-anchor="middle" font-size="11" fill="#888">0</text>
+<line x1="302" y1="30" x2="302" y2="250" stroke="#e0e0e0" stroke-width="1" />
+<text x="302" y="268" text-anchor="middle" font-size="11" fill="#888">3</text>
+<line x1="485" y1="30" x2="485" y2="250" stroke="#e0e0e0" stroke-width="1" />
+<text x="485" y="268" text-anchor="middle" font-size="11" fill="#888">7</text>
+<line x1="667" y1="30" x2="667" y2="250" stroke="#e0e0e0" stroke-width="1" />
+<text x="667" y="268" text-anchor="middle" font-size="11" fill="#888">11</text>
+<line x1="850" y1="30" x2="850" y2="250" stroke="#e0e0e0" stroke-width="1" />
+<text x="850" y="268" text-anchor="middle" font-size="11" fill="#888">15</text>
+<line x1="120" y1="30" x2="120" y2="250" stroke="#999" stroke-width="1" />
+<line x1="120" y1="250" x2="850" y2="250" stroke="#999" stroke-width="1" />
+<rect x="120" y="31" width="730" height="37" fill="#F44336" rx="3" />
+<text x="856" y="53" text-anchor="start" font-size="13" font-weight="600" fill="#333">15</text>
+<text x="112" y="53" text-anchor="end" font-size="13" fill="#333">Authentication</text>
+<rect x="120" y="76" width="584" height="37" fill="#FF9800" rx="3" />
+<text x="710" y="98" text-anchor="start" font-size="13" font-weight="600" fill="#333">12</text>
+<text x="112" y="98" text-anchor="end" font-size="13" fill="#333">Payment</text>
+<rect x="120" y="121" width="389" height="37" fill="#FFEB3B" rx="3" />
+<text x="515" y="143" text-anchor="start" font-size="13" font-weight="600" fill="#333">8</text>
+<text x="112" y="143" text-anchor="end" font-size="13" fill="#333">Search</text>
+<rect x="120" y="166" width="243" height="37" fill="#2196F3" rx="3" />
+<text x="369" y="188" text-anchor="start" font-size="13" font-weight="600" fill="#333">5</text>
+<text x="112" y="188" text-anchor="end" font-size="13" fill="#333">User Profile</text>
+<rect x="120" y="211" width="97" height="37" fill="#4CAF50" rx="3" />
+<text x="223" y="233" text-anchor="start" font-size="13" font-weight="600" fill="#333">2</text>
+<text x="112" y="233" text-anchor="end" font-size="13" fill="#333">Notifications</text>
+</svg>
+</div>
+<h2>Detailed Test Results</h2>
+<table>
+<thead><tr>
+<th>Suite</th>
+<th>Tests</th>
+<th>Passed</th>
+<th>Failed</th>
+<th>Coverage</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Auth.Login</td>
+<td>45</td>
+<td>42</td>
+<td style="background: #f8f9fa; color: #999;">3</td>
+<td style="background: #C8E6C9; font-weight: 600;">91.2</td>
+</tr>
+<tr>
+<td>Auth.OAuth</td>
+<td>32</td>
+<td>20</td>
+<td style="background: #FFCDD2;">12</td>
+<td style="background: #FFCDD2;">68.5</td>
+</tr>
+<tr>
+<td>Payment.Charge</td>
+<td>28</td>
+<td>26</td>
+<td style="background: #f8f9fa; color: #999;">2</td>
+<td style="background: #C8E6C9; font-weight: 600;">94.1</td>
+</tr>
+<tr>
+<td>Payment.Refund</td>
+<td>18</td>
+<td>8</td>
+<td style="background: #FFCDD2;">10</td>
+<td style="background: #FFCDD2;">55</td>
+</tr>
+<tr>
+<td>Search.Index</td>
+<td>52</td>
+<td>44</td>
+<td style="background: #FFE0B2;">8</td>
+<td>82.3</td>
+</tr>
+<tr>
+<td>User.Profile</td>
+<td>38</td>
+<td>33</td>
+<td style="background: #FFE0B2;">5</td>
+<td>88.7</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>22</td>
+<td>20</td>
+<td style="background: #f8f9fa; color: #999;">2</td>
+<td style="background: #C8E6C9; font-weight: 600;">95.2</td>
+</tr>
+</tbody>
+<tfoot><tr class="total-row">
+<td style="font-weight: 600;">Total</td>
+<td>235</td>
+<td>193</td>
+<td>42</td>
+<td>Avg: 82.14</td>
+</tr></tfoot>
+</table>
+<h2>Module Coverage</h2>
+<div class="progress-container">
+<div class="progress-label"><strong>Core Library</strong> <span>94%</span></div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width:94%; background:#4CAF50;"></div>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-label"><strong>API Layer</strong> <span>88%</span></div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width:88%; background:#4CAF50;"></div>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-label"><strong>UI Components</strong> <span>72%</span></div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width:72%; background:#FF9800;"></div>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-label"><strong>Data Access</strong> <span>91%</span></div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width:91%; background:#4CAF50;"></div>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-label"><strong>Overall</strong> <span>87%</span></div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width:87%; background:#4CAF50;"></div>
+</div>
+</div>
+<hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;" />
+<h2>Build Status</h2>
+<span class="badge" style="background:#4CAF50;">BUILD PASSED</span>
+<span class="badge" style="background:#F44336;">42 FAILURES</span>
+<span class="badge" style="background:#FF9800;">DEPLOY BLOCKED</span>
+<span class="badge" style="background:#2196F3;">REVIEW REQUIRED</span>
+<hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;" />
+<h2>Build Environment</h2>
+<table class="kv-table">
+<tbody>
+<tr>
+<td style="background: #f1f3f5; font-weight: 600; width: 30%;">Build Agent</td>
+<td>runner-prod-03</td>
+</tr>
+<tr>
+<td style="background: #f1f3f5; font-weight: 600; width: 30%;">SDK Version</td>
+<td>.NET 10.0.100</td>
+</tr>
+<tr>
+<td style="background: #f1f3f5; font-weight: 600; width: 30%;">Configuration</td>
+<td>Release</td>
+</tr>
+<tr>
+<td style="background: #f1f3f5; font-weight: 600; width: 30%;">Platform</td>
+<td>linux-x64</td>
+</tr>
+<tr>
+<td style="background: #f1f3f5; font-weight: 600; width: 30%;">Git Branch</td>
+<td>main</td>
+</tr>
+<tr>
+<td style="background: #f1f3f5; font-weight: 600; width: 30%;">Git Commit</td>
+<td>a3f7c2d8e1b4f6a9c3d5e7f8</td>
+</tr>
+<tr>
+<td style="background: #f1f3f5; font-weight: 600; width: 30%;">Triggered By</td>
+<td>Schedule (nightly)</td>
+</tr>
+</tbody>
+</table>
+<h2>Error Details</h2>
+<details class="collapsible">
+<summary>Auth.OAuth — 12 failures (click to expand)</summary>
+<div class="collapsible-content">
+<div class="alert alert-error" style="background:#ffebee; border-left:4px solid #F44336;">
+<span class="alert-icon">❌</span> OAuth token refresh failing consistently — upstream provider timeout.
+</div>
+<pre class="code-block"><code>System.Net.Http.HttpRequestException: Connection refused (oauth.provider.com:443)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync()
+   at AuthService.RefreshTokenAsync(string refreshToken)
+   at AuthTests.OAuth_RefreshToken_ShouldSucceed() in Tests/Auth/OAuthTests.cs:line 87</code></pre>
+<p>Affected tests:</p>
+<ol>
+<li>OAuth_RefreshToken_ShouldSucceed</li>
+<li>OAuth_RefreshToken_WithExpiredToken_ShouldReauth</li>
+<li>OAuth_Login_WithProvider_Google</li>
+<li>OAuth_Login_WithProvider_GitHub</li>
+<li>OAuth_Callback_ShouldExchangeCode</li>
+<li>OAuth_Callback_WithInvalidState_ShouldFail</li>
+<li>OAuth_Logout_ShouldRevokeToken</li>
+<li>OAuth_Logout_ShouldClearSession</li>
+<li>OAuth_TokenCache_ShouldExpire</li>
+<li>OAuth_TokenCache_ShouldRefresh</li>
+<li>OAuth_Scope_ShouldRequest</li>
+<li>OAuth_Scope_ShouldValidate</li>
+</ol>
+</div>
+</details>
+<details class="collapsible">
+<summary>Payment.Refund — 10 failures</summary>
+<div class="collapsible-content">
+<div class="alert alert-warning" style="background:#fff8e1; border-left:4px solid #FF9800;">
+<span class="alert-icon">⚠️</span> Refund processing is returning 503 from payment gateway.
+</div>
+<ul>
+<li>Refund_FullAmount_ShouldSucceed</li>
+<li>Refund_PartialAmount_ShouldSucceed</li>
+<li>Refund_DuplicateRequest_ShouldReject</li>
+<li>Refund_ExpiredOrder_ShouldFail</li>
+<li>Refund_WithNote_ShouldPersist</li>
+</ul>
+</div>
+</details>
+<hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;" />
+<h2>Recommended Actions</h2>
+<dl class="definition-list">
+<dt>Investigate OAuth</dt>
+<dd>Check oauth.provider.com connectivity and rate limits</dd>
+<dt>Payment Gateway</dt>
+<dd>Review 503 responses — possible maintenance window</dd>
+<dt>Search Index</dt>
+<dd>Reindex test data — possible schema drift after migration</dd>
+<dt>Block Deploy</dt>
+<dd>Do not deploy to production until failures are below 5</dd>
+</dl>
+<h2>Related Resources</h2>
+<p><a class="report-link" href="https://ci.example.com/pipeline/nightly">Build Pipeline Dashboard</a></p>
+<p><a class="report-link" href="https://ci.example.com/reports/build-99">Previous Build Report</a></p>
+<p><a class="report-link" href="https://coverage.example.com/main">Test Coverage Dashboard</a></p>
+<h2>Build Duration History</h2>
+<h2>Build Time (minutes)</h2>
+<div class="chart-container" style="max-width:900px; text-align: left;">
+<svg viewBox="0 0 900 280" width="100%" height="280" preserveAspectRatio="xMinYMin meet" xmlns="http://www.w3.org/2000/svg">
+<line x1="60" y1="240" x2="880" y2="240" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="244" text-anchor="end" font-size="11" fill="#888">0</text>
+<line x1="60" y1="188" x2="880" y2="188" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="192" text-anchor="end" font-size="11" fill="#888">12</text>
+<line x1="60" y1="135" x2="880" y2="135" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="139" text-anchor="end" font-size="11" fill="#888">25</text>
+<line x1="60" y1="83" x2="880" y2="83" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="87" text-anchor="end" font-size="11" fill="#888">38</text>
+<line x1="60" y1="30" x2="880" y2="30" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="34" text-anchor="end" font-size="11" fill="#888">51</text>
+<line x1="60" y1="30" x2="60" y2="240" stroke="#999" stroke-width="1" />
+<line x1="60" y1="240" x2="880" y2="240" stroke="#999" stroke-width="1" />
+<rect x="61" y="84" width="128" height="156" fill="#4CAF50" rx="3" />
+<text x="125" y="78" text-anchor="middle" font-size="13" font-weight="600" fill="#333">38</text>
+<text x="125" y="262" text-anchor="middle" font-size="13" fill="#333">Build 95</text>
+<rect x="199" y="68" width="128" height="172" fill="#2196F3" rx="3" />
+<text x="263" y="62" text-anchor="middle" font-size="13" font-weight="600" fill="#333">42</text>
+<text x="263" y="262" text-anchor="middle" font-size="13" fill="#333">Build 96</text>
+<rect x="337" y="96" width="128" height="144" fill="#FF9800" rx="3" />
+<text x="401" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#333">35</text>
+<text x="401" y="262" text-anchor="middle" font-size="13" fill="#333">Build 97</text>
+<rect x="475" y="30" width="128" height="210" fill="#F44336" rx="3" />
+<text x="539" y="24" text-anchor="middle" font-size="13" font-weight="600" fill="#333">51</text>
+<text x="539" y="262" text-anchor="middle" font-size="13" fill="#333">Build 98</text>
+<rect x="613" y="47" width="128" height="193" fill="#9C27B0" rx="3" />
+<text x="677" y="41" text-anchor="middle" font-size="13" font-weight="600" fill="#333">47</text>
+<text x="677" y="262" text-anchor="middle" font-size="13" fill="#333">Build 99</text>
+<rect x="751" y="59" width="128" height="181" fill="#00BCD4" rx="3" />
+<text x="815" y="53" text-anchor="middle" font-size="13" font-weight="600" fill="#333">44</text>
+<text x="815" y="262" text-anchor="middle" font-size="13" fill="#333">Build 100</text>
+</svg>
+</div>
+<div style="page-break-before: always;"></div>
+<h2>Appendix: Raw HTML Support</h2>
+<p>The AddHtml method allows inserting arbitrary HTML when the built-in features don&#39;t cover an edge case:</p>
+<blockquote style="border-left: 4px solid #1976D2; padding: 8px 16px; margin: 12px 0; color: #555; font-style: italic;">"The best reporting library is the one you actually use." — A pragmatic developer</blockquote>
+<footer class="report-footer">Generated by CDS.FluentHtmlReports — Build Pipeline Report — 2026-02-17 16:49:12</footer>
+</div>
+</body>
+</html>

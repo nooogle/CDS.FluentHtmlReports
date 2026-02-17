@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layout Features Demo</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+    }
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 30px;
+        background: #fff;
+    }
+    h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        color: #1a1a1a;
+        border-bottom: 3px solid #1976D2;
+        padding-bottom: 8px;
+    }
+    h2 {
+        font-size: 18px;
+        margin: 30px 0 12px;
+        color: #1976D2;
+    }
+    h3 { font-size: 16px; margin: 20px 0 8px; color: #333; }
+    h4 { font-size: 14px; margin: 16px 0 6px; color: #555; }
+    h5 { font-size: 13px; margin: 14px 0 4px; color: #666; }
+    h6 { font-size: 12px; margin: 12px 0 4px; color: #888; }
+    p { margin-bottom: 12px; font-size: 14px; }
+    .metadata {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 6px;
+    }
+    .metadata span {
+        display: inline-block;
+        margin-right: 24px;
+    }
+    .metadata-section {
+        margin-bottom: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    th, td {
+        padding: 8px 12px;
+        border: 1px solid #dee2e6;
+        text-align: center;
+    }
+    th {
+        background: #f1f3f5;
+        font-weight: 600;
+    }
+    .row-header {
+        background: #f1f3f5;
+        font-weight: 600;
+        text-align: left;
+    }
+    .confusion-match {
+        background: #C8E6C9;
+        font-weight: 600;
+    }
+    .confusion-mismatch {
+        background: #FFCDD2;
+    }
+    .confusion-zero {
+        background: #fff;
+        color: #ccc;
+    }
+    .total-row td {
+        background: #f8f9fa;
+        font-weight: 600;
+        border-top: 2px solid #999;
+    }
+    .total-col {
+        background: #f8f9fa;
+        font-weight: 600;
+    }
+    .kv-table td:first-child {
+        text-align: left;
+    }
+    .kv-table td:last-child {
+        text-align: left;
+    }
+    .correctness-rates {
+        margin-top: 8px;
+        margin-bottom: 24px;
+    }
+    .chart-container {
+        margin: 12px 0 30px;
+    }
+    svg text {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Lists */
+    ul, ol {
+        margin: 10px 0 16px 28px;
+        font-size: 14px;
+    }
+    li {
+        margin-bottom: 4px;
+    }
+
+    /* Alerts */
+    .alert {
+        padding: 12px 16px;
+        margin: 12px 0;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    .alert-icon {
+        margin-right: 6px;
+    }
+
+    /* Code blocks */
+    .code-block {
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 14px 16px;
+        margin: 12px 0;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        overflow-x: auto;
+        white-space: pre;
+    }
+
+    /* Badges */
+    .badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        margin: 2px 4px 2px 0;
+    }
+
+    /* Links */
+    .report-link {
+        color: #1976D2;
+        text-decoration: none;
+        font-size: 14px;
+        border-bottom: 1px solid transparent;
+    }
+    .report-link:hover {
+        border-bottom-color: #1976D2;
+    }
+
+    /* Definition lists */
+    .definition-list {
+        margin: 10px 0 16px;
+        font-size: 14px;
+    }
+    .definition-list dt {
+        font-weight: 600;
+        color: #333;
+        margin-top: 8px;
+    }
+    .definition-list dd {
+        margin-left: 20px;
+        color: #555;
+    }
+
+    /* Progress bars */
+    .progress-container {
+        margin: 10px 0;
+    }
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+    .progress-bar-bg {
+        background: #e9ecef;
+        border-radius: 6px;
+        height: 18px;
+        overflow: hidden;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        border-radius: 6px;
+        transition: width 0.3s;
+    }
+
+    /* KPI cards */
+    .kpi-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin: 16px 0 20px;
+    }
+    .kpi-card {
+        flex: 1;
+        min-width: 140px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 16px 20px;
+        text-align: center;
+    }
+    .kpi-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1976D2;
+        line-height: 1.2;
+    }
+    .kpi-label {
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Footer */
+    .report-footer {
+        margin-top: 40px;
+        padding-top: 12px;
+        border-top: 1px solid #dee2e6;
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
+
+    /* Collapsible sections */
+    .collapsible {
+        margin: 12px 0;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+    .collapsible summary {
+        padding: 10px 16px;
+        background: #f8f9fa;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+    .collapsible[open] summary {
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 4px 4px 0 0;
+    }
+    .collapsible-content {
+        padding: 16px;
+    }
+
+    /* Columns layout */
+    .columns-row {
+        display: flex;
+        gap: 24px;
+        margin: 12px 0;
+    }
+    .column {
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* Image container */
+    .image-container {
+        margin: 12px 0;
+        text-align: center;
+    }
+    .image-container img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    @media print {
+        body { background: #fff; }
+        .container { padding: 0; max-width: 100%; }
+        .collapsible { border: none; }
+        .collapsible summary { display: none; }
+        .collapsible-content { padding: 0; }
+        .kpi-card { border: 1px solid #ccc; }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Layout Features Demo</h1>
+<h2>KPI Summary Cards</h2>
+<p>Prominent headline numbers in a responsive flex row:</p>
+<div class="kpi-row">
+<div class="kpi-card">
+<div class="kpi-value">12,847</div>
+<div class="kpi-label">Total Records</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">96.4%</div>
+<div class="kpi-label">Pass Rate</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">00:03:42</div>
+<div class="kpi-label">Duration</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">14</div>
+<div class="kpi-label">Errors</div>
+</div>
+</div>
+<p>Works with any number of cards — wraps to multiple rows:</p>
+<div class="kpi-row">
+<div class="kpi-card">
+<div class="kpi-value">3,291</div>
+<div class="kpi-label">Orders</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">$87,420</div>
+<div class="kpi-label">Revenue</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">$26.56</div>
+<div class="kpi-label">Avg Order</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">42</div>
+<div class="kpi-label">Returns</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">1,847</div>
+<div class="kpi-label">Customers</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">4.7/5</div>
+<div class="kpi-label">Satisfaction</div>
+</div>
+</div>
+<hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;" />
+<h2>Progress Bars</h2>
+<p>Auto-colored by percentage (green &gt;= 80%, amber &gt;= 50%, red below):</p>
+<div class="progress-container">
+<div class="progress-label"><strong>Test Coverage</strong> <span>92%</span></div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width:92%; background:#4CAF50;"></div>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-label"><strong>Migration Progress</strong> <span>1204/1500</span></div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width:80%; background:#4CAF50;"></div>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-label"><strong>Build Completion</strong> <span>65%</span></div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width:65%; background:#FF9800;"></div>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-label"><strong>Data Quality</strong> <span>35%</span></div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width:35%; background:#F44336;"></div>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-label"><strong>Upload</strong> <span>100%</span></div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width:100%; background:#4CAF50;"></div>
+</div>
+</div>
+<hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;" />
+<h2>Collapsible Sections</h2>
+<p>Uses HTML5 details/summary — no JavaScript required:</p>
+<details class="collapsible" open>
+<summary>Expanded by default — Configuration Details</summary>
+<div class="collapsible-content">
+<table class="kv-table">
+<tbody>
+<tr>
+<td style="background: #f1f3f5; font-weight: 600; width: 30%;">Server</td>
+<td>prod-app-03</td>
+</tr>
+<tr>
+<td style="background: #f1f3f5; font-weight: 600; width: 30%;">Port</td>
+<td>5432</td>
+</tr>
+<tr>
+<td style="background: #f1f3f5; font-weight: 600; width: 30%;">Database</td>
+<td>OrdersDB</td>
+</tr>
+<tr>
+<td style="background: #f1f3f5; font-weight: 600; width: 30%;">SSL</td>
+<td>Enabled</td>
+</tr>
+</tbody>
+</table>
+</div>
+</details>
+<details class="collapsible">
+<summary>Collapsed by default — Error Log</summary>
+<div class="collapsible-content">
+<div class="alert alert-error" style="background:#ffebee; border-left:4px solid #F44336;">
+<span class="alert-icon">❌</span> Connection timeout at 14:32:05 UTC
+</div>
+<pre class="code-block"><code>System.TimeoutException: The operation has timed out.
+   at Npgsql.NpgsqlConnector.Connect(TimeSpan timeout)
+   at Npgsql.ConnectorPool.AllocateLong(NpgsqlConnection conn)
+   at Program.Main() in /app/Program.cs:line 42</code></pre>
+</div>
+</details>
+<details class="collapsible">
+<summary>Collapsed — Detailed Results Table</summary>
+<div class="collapsible-content">
+<table>
+<thead><tr>
+<th>Test</th>
+<th>Result</th>
+<th>Duration</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Login</td>
+<td>Pass</td>
+<td>1.2s</td>
+</tr>
+<tr>
+<td>Search</td>
+<td>Pass</td>
+<td>0.8s</td>
+</tr>
+<tr>
+<td>Checkout</td>
+<td>Fail</td>
+<td>3.5s</td>
+</tr>
+<tr>
+<td>Export</td>
+<td>Pass</td>
+<td>2.1s</td>
+</tr>
+</tbody>
+</table>
+</div>
+</details>
+<hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;" />
+<h2>Two-Column Layout</h2>
+<p>Side-by-side content using CSS flexbox:</p>
+<div class="columns-row">
+<div class="column">
+<h3>Left Column</h3>
+<p>This content sits in the left column. You can place any report elements here — tables, lists, alerts, etc.</p>
+<ul>
+<li>Item Alpha</li>
+<li>Item Beta</li>
+<li>Item Gamma</li>
+</ul>
+</div>
+<div class="column">
+<h3>Right Column</h3>
+<p>The right column has equal width. Content flows independently in each column.</p>
+<div class="alert alert-info" style="background:#e3f2fd; border-left:4px solid #1976D2;">
+<span class="alert-icon">ℹ️</span> Columns resize proportionally on smaller screens.
+</div>
+</div>
+</div>
+<p>Columns with a table and chart side by side:</p>
+<div class="columns-row">
+<div class="column">
+<table>
+<thead><tr>
+<th>Region</th>
+<th>Sales</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>North</td>
+<td>4200</td>
+</tr>
+<tr>
+<td>South</td>
+<td>3800</td>
+</tr>
+<tr>
+<td>East</td>
+<td>5100</td>
+</tr>
+<tr>
+<td>West</td>
+<td>2900</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="column">
+<h2>Regional Sales</h2>
+<div class="chart-container" style="max-width:900px; text-align: left;">
+<svg viewBox="0 0 900 280" width="100%" height="280" preserveAspectRatio="xMinYMin meet" xmlns="http://www.w3.org/2000/svg">
+<line x1="60" y1="240" x2="880" y2="240" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="244" text-anchor="end" font-size="11" fill="#888">0</text>
+<line x1="60" y1="188" x2="880" y2="188" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="192" text-anchor="end" font-size="11" fill="#888">1275</text>
+<line x1="60" y1="135" x2="880" y2="135" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="139" text-anchor="end" font-size="11" fill="#888">2550</text>
+<line x1="60" y1="83" x2="880" y2="83" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="87" text-anchor="end" font-size="11" fill="#888">3825</text>
+<line x1="60" y1="30" x2="880" y2="30" stroke="#e0e0e0" stroke-width="1" />
+<text x="52" y="34" text-anchor="end" font-size="11" fill="#888">5100</text>
+<line x1="60" y1="30" x2="60" y2="240" stroke="#999" stroke-width="1" />
+<line x1="60" y1="240" x2="880" y2="240" stroke="#999" stroke-width="1" />
+<rect x="61" y="68" width="197" height="172" fill="#2196F3" rx="3" />
+<text x="159" y="62" text-anchor="middle" font-size="13" font-weight="600" fill="#333">4200</text>
+<text x="159" y="262" text-anchor="middle" font-size="13" fill="#333">North</text>
+<rect x="268" y="84" width="197" height="156" fill="#4CAF50" rx="3" />
+<text x="366" y="78" text-anchor="middle" font-size="13" font-weight="600" fill="#333">3800</text>
+<text x="366" y="262" text-anchor="middle" font-size="13" fill="#333">South</text>
+<rect x="475" y="30" width="197" height="210" fill="#FF9800" rx="3" />
+<text x="573" y="24" text-anchor="middle" font-size="13" font-weight="600" fill="#333">5100</text>
+<text x="573" y="262" text-anchor="middle" font-size="13" fill="#333">East</text>
+<rect x="682" y="121" width="197" height="119" fill="#F44336" rx="3" />
+<text x="780" y="115" text-anchor="middle" font-size="13" font-weight="600" fill="#333">2900</text>
+<text x="780" y="262" text-anchor="middle" font-size="13" fill="#333">West</text>
+</svg>
+</div>
+</div>
+</div>
+<hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;" />
+<h2>Page Breaks</h2>
+<p>When printing or saving to PDF, you can force content to start on a new page:</p>
+<p>(A page break is inserted below this — visible when printing)</p>
+<div style="page-break-before: always;"></div>
+<h2>This Starts on a New Page (when printed)</h2>
+<p>Content after the page break appears on the next printed page.</p>
+<footer class="report-footer">Generated on 2026-02-17 16:49:12</footer>
+</div>
+</body>
+</html>
