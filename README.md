@@ -107,12 +107,14 @@ The code above generates a professional HTML report. Here's a preview of the out
 
 ### Demo Reports Produced by `ConsoleTest`
 
-- [Quick Start](docs/html_demo_reports/00-quick-start.html)
-- [Text Features](docs/html_demo_reports/01-text-features.html)
-- [Table Features](docs/html_demo_reports/02-table-features.html)
-- [Chart Features](docs/html_demo_reports/03-chart-features.html)
-- [Layout Features](docs/html_demo_reports/04-layout-features.html)
-- [All Features](docs/html_demo_reports/05-all-features.html)
+- [Quick Start](https://nooogle.github.io/CDS.FluentHtmlReports/docs/html_demo_reports/00-quick-start.html)
+- [Text Features](https://nooogle.github.io/CDS.FluentHtmlReports/docs/html_demo_reports/01-text-features.html)
+- [Table Features](https://nooogle.github.io/CDS.FluentHtmlReports/docs/html_demo_reports/02-table-features.html)
+- [Chart Features](https://nooogle.github.io/CDS.FluentHtmlReports/docs/html_demo_reports/03-chart-features.html)
+- [Layout Features](https://nooogle.github.io/CDS.FluentHtmlReports/docs/html_demo_reports/04-layout-features.html)
+- [All Features](https://nooogle.github.io/CDS.FluentHtmlReports/docs/html_demo_reports/05-all-features.html)
+
+...
 
 
 ## Features
