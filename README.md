@@ -85,6 +85,80 @@ File.WriteAllText("report.html", html);
 
 That's it — one fluent chain produces a complete, styled HTML document.
 
+### What It Looks Like
+
+The code above generates a professional HTML report. Here's a preview of the output:
+
+![Example Report](docs/images/example-report.png)
+
+<details>
+<summary>📄 View as markdown approximation</summary>
+
+---
+
+<div align="center">
+
+# **Weekly Team Report**
+
+</div>
+
+Here's a quick overview of this week's progress for the development team.
+
+**Week Ending:** Feb 17, 2026  ·  **Team:** Engineering  ·  **Sprint:** Sprint 24
+
+---
+
+#### Team Summary
+
+<table>
+<tr>
+<td align="center"><b>73</b><br><sub>Total Tasks</sub></td>
+<td align="center"><b>68</b><br><sub>Completed</sub></td>
+<td align="center"><b>5</b><br><sub>In Progress</sub></td>
+<td align="center"><b>93%</b><br><sub>Success Rate</sub></td>
+</tr>
+</table>
+
+---
+
+#### Team Members
+
+| Name | Role | TasksCompleted | Status |
+|------|------|----------------|--------|
+| Alice Johnson | Backend | 23 | Active |
+| Bob Smith | Frontend | 19 | Active |
+| Carol White | QA | 31 | Active |
+
+---
+
+#### Task Completion by Role
+
+```
+QA         ████████████████████████████████ 31
+Backend    ██████████████████████ 23
+Frontend   ██████████████████ 19
+```
+
+---
+
+> ✅ **Success:** All sprint goals achieved! Great work team! 🎉
+
+<div align="center">
+<sub>Generated with CDS.FluentHtmlReports — 2026-02-17 14:30:45</sub>
+</div>
+
+---
+
+**The actual HTML includes:**
+- ✨ Professional styling with a clean, modern design
+- 📊 Inline SVG charts (bar, pie, donut, line) — no external images
+- 📱 Responsive layout that works on any screen size
+- 🖨️ Print-friendly formatting for PDF export
+- 🎨 Color-coded alerts, progress bars, and KPI cards
+- 📦 Single self-contained file — no external dependencies
+
+</details>
+
 ## Features
 
 ### Text & Content
