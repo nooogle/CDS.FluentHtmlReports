@@ -113,6 +113,7 @@ The code above generates a professional HTML report. Here's a preview of the out
 - [Chart Features](https://nooogle.github.io/CDS.FluentHtmlReports/docs/html_demo_reports/03-chart-features.html)
 - [Layout Features](https://nooogle.github.io/CDS.FluentHtmlReports/docs/html_demo_reports/04-layout-features.html)
 - [All Features](https://nooogle.github.io/CDS.FluentHtmlReports/docs/html_demo_reports/05-all-features.html)
+- [Image Features](https://nooogle.github.io/CDS.FluentHtmlReports/docs/html_demo_reports/06-image-features.html)
 
 ...
 
