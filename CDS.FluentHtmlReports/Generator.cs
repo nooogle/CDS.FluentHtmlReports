@@ -185,15 +185,107 @@ public class Generator
         return this;
     }
 
-    /// <summary>Adds a base64-encoded image from raw bytes.</summary>
-    public Generator AddImage(byte[] imageData, string mimeType, string? alt = null)
+    /// <summary>
+    /// Adds a base64-encoded image from raw bytes, producing a fully self-contained report.
+    /// </summary>
+    /// <param name="imageData">The raw image bytes (PNG, JPEG, GIF, SVG, WebP, BMP, etc.).</param>
+    /// <param name="mimeType">The MIME type, e.g. <c>"image/png"</c> or <c>"image/svg+xml"</c>.</param>
+    /// <param name="alt">Optional alt text for accessibility.</param>
+    /// <param name="maxWidthPercent">Maximum image width as a percentage of the container (1–100). Defaults to 100.</param>
+    /// <param name="alignment">Horizontal alignment of the image. Defaults to <see cref="ImageAlignment.Center"/>.</param>
+    /// <param name="caption">Optional caption rendered as a <c>&lt;figcaption&gt;</c> below the image.</param>
+    /// <remarks>
+    /// <para>
+    /// This library has zero dependencies and does not reference any image-processing package.
+    /// To produce <paramref name="imageData"/> from a cross-platform image library, use either
+    /// <see href="https://github.com/mono/SkiaSharp">SkiaSharp</see> or
+    /// <see href="https://github.com/SixLabors/ImageSharp">SixLabors.ImageSharp</see>, both of which
+    /// work on Windows, macOS, and Linux.
+    /// </para>
+    /// <para><b>SkiaSharp example:</b></para>
+    /// <code>
+    /// using SkiaSharp;
+    /// using var bmp = new SKBitmap(200, 100);
+    /// // ... draw on bmp ...
+    /// using var image = SKImage.FromBitmap(bmp);
+    /// using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+    /// report.AddImage(data.ToArray(), "image/png", "My chart");
+    /// </code>
+    /// <para><b>SixLabors.ImageSharp example:</b></para>
+    /// <code>
+    /// using SixLabors.ImageSharp;
+    /// using SixLabors.ImageSharp.Formats.Png;
+    /// using var img = new Image&lt;Rgba32&gt;(200, 100);
+    /// // ... draw on img ...
+    /// using var ms = new MemoryStream();
+    /// img.Save(ms, new PngEncoder());
+    /// report.AddImage(ms.ToArray(), "image/png", "My chart");
+    /// </code>
+    /// <para><b>System.Drawing.Bitmap (Windows only) example:</b></para>
+    /// <code>
+    /// // Note: System.Drawing.Common is Windows-only on .NET 6+.
+    /// using var bmp = new System.Drawing.Bitmap(200, 100);
+    /// // ... draw on bmp ...
+    /// using var ms = new MemoryStream();
+    /// bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+    /// report.AddImage(ms.ToArray(), "image/png", "My chart");
+    /// </code>
+    /// </remarks>
+    public Generator AddImage(byte[] imageData, string mimeType, string? alt = null,
+        int maxWidthPercent = 100, ImageAlignment alignment = ImageAlignment.Center, string? caption = null)
     {
-        _textRenderer.AddImage(imageData, mimeType, alt);
+        _textRenderer.AddImage(imageData, mimeType, alt, maxWidthPercent, alignment, caption);
         return this;
     }
 
-    /// <summary>Adds a base64-encoded image from a file path.</summary>
-    public Generator AddImageFromFile(string filePath, string? alt = null)
+    /// <summary>
+    /// Adds a base64-encoded image read from a <see cref="Stream"/>, producing a fully self-contained report.
+    /// The stream is read from its current position.
+    /// </summary>
+    /// <param name="imageData">A readable stream containing the raw image bytes.</param>
+    /// <param name="mimeType">The MIME type, e.g. <c>"image/png"</c> or <c>"image/svg+xml"</c>.</param>
+    /// <param name="alt">Optional alt text for accessibility.</param>
+    /// <param name="maxWidthPercent">Maximum image width as a percentage of the container (1–100). Defaults to 100.</param>
+    /// <param name="alignment">Horizontal alignment of the image. Defaults to <see cref="ImageAlignment.Center"/>.</param>
+    /// <param name="caption">Optional caption rendered as a <c>&lt;figcaption&gt;</c> below the image.</param>
+    /// <remarks>
+    /// <para>Convenient when image data comes from a database BLOB, HTTP response, or image library without
+    /// needing an intermediate <c>byte[]</c>. The caller retains ownership of the stream.</para>
+    /// <para><b>SkiaSharp example:</b></para>
+    /// <code>
+    /// using SkiaSharp;
+    /// using var image = SKImage.FromBitmap(myBitmap);
+    /// using var skData = image.Encode(SKEncodedImageFormat.Png, 100);
+    /// using var ms = skData.AsStream();
+    /// report.AddImage(ms, "image/png", alt: "Chart", maxWidthPercent: 60);
+    /// </code>
+    /// <para><b>SixLabors.ImageSharp example:</b></para>
+    /// <code>
+    /// using var ms = new MemoryStream();
+    /// img.Save(ms, new PngEncoder());
+    /// ms.Position = 0;
+    /// report.AddImage(ms, "image/png", caption: "Figure 1");
+    /// </code>
+    /// </remarks>
+    public Generator AddImage(Stream imageData, string mimeType, string? alt = null,
+        int maxWidthPercent = 100, ImageAlignment alignment = ImageAlignment.Center, string? caption = null)
+    {
+        _textRenderer.AddImage(imageData, mimeType, alt, maxWidthPercent, alignment, caption);
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a base64-encoded image from a file path, producing a fully self-contained report.
+    /// The MIME type is inferred from the file extension.
+    /// Supports <c>.png</c>, <c>.jpg</c>/<c>.jpeg</c>, <c>.gif</c>, <c>.svg</c>, <c>.webp</c>, and <c>.bmp</c>.
+    /// </summary>
+    /// <param name="filePath">Absolute or relative path to the image file.</param>
+    /// <param name="alt">Optional alt text for accessibility.</param>
+    /// <param name="maxWidthPercent">Maximum image width as a percentage of the container (1–100). Defaults to 100.</param>
+    /// <param name="alignment">Horizontal alignment of the image. Defaults to <see cref="ImageAlignment.Center"/>.</param>
+    /// <param name="caption">Optional caption rendered as a <c>&lt;figcaption&gt;</c> below the image.</param>
+    public Generator AddImageFromFile(string filePath, string? alt = null,
+        int maxWidthPercent = 100, ImageAlignment alignment = ImageAlignment.Center, string? caption = null)
     {
         var bytes = File.ReadAllBytes(filePath);
         var ext = Path.GetExtension(filePath).ToLowerInvariant();
@@ -207,7 +299,55 @@ public class Generator
             ".bmp" => "image/bmp",
             _ => "application/octet-stream"
         };
-        _textRenderer.AddImage(bytes, mimeType, alt);
+        _textRenderer.AddImage(bytes, mimeType, alt, maxWidthPercent, alignment, caption);
+        return this;
+    }
+
+    /// <summary>
+    /// Adds an image referenced by an external URL.
+    /// </summary>
+    /// <param name="url">The URL of the image (http or https).</param>
+    /// <param name="alt">Optional alt text for accessibility.</param>
+    /// <param name="maxWidthPercent">Maximum image width as a percentage of the container (1–100). Defaults to 100.</param>
+    /// <param name="alignment">Horizontal alignment of the image. Defaults to <see cref="ImageAlignment.Center"/>.</param>
+    /// <param name="caption">Optional caption rendered as a <c>&lt;figcaption&gt;</c> below the image.</param>
+    /// <remarks>
+    /// <para>
+    /// Unlike <see cref="AddImage(byte[], string, string?, int, ImageAlignment, string?)"/>, the image is
+    /// <b>not embedded</b> in the HTML. The browser fetches it when the report is opened, so the report
+    /// will only display correctly when the viewer has network access to the URL.
+    /// </para>
+    /// <para>Suitable for intranet dashboards, live reports, or placeholder/stock images hosted at a
+    /// stable URL. Not suitable for emailed attachments or fully offline reports.</para>
+    /// </remarks>
+    public Generator AddImageFromUrl(string url, string? alt = null,
+        int maxWidthPercent = 100, ImageAlignment alignment = ImageAlignment.Center, string? caption = null)
+    {
+        _textRenderer.AddImageFromUrl(url, alt, maxWidthPercent, alignment, caption);
+        return this;
+    }
+
+    /// <summary>
+    /// Adds an inline SVG fragment directly into the report.
+    /// </summary>
+    /// <param name="svgMarkup">A complete <c>&lt;svg&gt;...&lt;/svg&gt;</c> string.</param>
+    /// <param name="maxWidthPercent">Maximum container width as a percentage of the report container (1–100). Defaults to 100.</param>
+    /// <param name="alignment">Horizontal alignment of the SVG block. Defaults to <see cref="ImageAlignment.Center"/>.</param>
+    /// <param name="caption">Optional caption rendered as a <c>&lt;figcaption&gt;</c> below the SVG.</param>
+    /// <remarks>
+    /// <para>
+    /// Because no base64 encoding is needed, this is the most efficient way to include programmatically
+    /// generated vector graphics. It also keeps the report fully self-contained with no external
+    /// dependencies — ideal for logos, diagrams, icons, or custom charts created with any SVG-capable
+    /// library (e.g. <see href="https://github.com/vvvv/SVG">Svg.NET</see>).
+    /// </para>
+    /// <para>The SVG element's own <c>width</c>/<c>height</c> attributes control its intrinsic size;
+    /// <paramref name="maxWidthPercent"/> constrains the containing block.</para>
+    /// </remarks>
+    public Generator AddSvg(string svgMarkup, int maxWidthPercent = 100,
+        ImageAlignment alignment = ImageAlignment.Center, string? caption = null)
+    {
+        _textRenderer.AddSvg(svgMarkup, maxWidthPercent, alignment, caption);
         return this;
     }
 
@@ -661,11 +801,23 @@ public class Generator
             /* Image container */
             .image-container {
                 margin: 12px 0;
-                text-align: center;
             }
             .image-container img {
                 max-width: 100%;
                 height: auto;
+            }
+            .image-container svg {
+                width: 100%;
+                height: auto;
+            }
+            .image-container--left  { text-align: left; }
+            .image-container--center { text-align: center; }
+            .image-container--right { text-align: right; }
+            .image-caption {
+                font-size: 13px;
+                color: #666;
+                margin-top: 6px;
+                font-style: italic;
             }
 
             @media print {

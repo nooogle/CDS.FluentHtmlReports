@@ -220,13 +220,88 @@ internal class TextRenderer(StringBuilder _html)
     }
 
     /// <summary>
-    /// Appends a base64-encoded image.
+    /// Appends a base64-encoded image from raw bytes.
     /// </summary>
-    internal void AddImage(byte[] imageData, string mimeType, string? alt = null)
+    internal void AddImage(byte[] imageData, string mimeType, string? alt = null,
+        int maxWidthPercent = 100, ImageAlignment alignment = ImageAlignment.Center, string? caption = null)
     {
         var base64 = Convert.ToBase64String(imageData);
+        AppendImageElement($"data:{Enc(mimeType)};base64,{base64}", alt, maxWidthPercent, alignment, caption);
+    }
+
+    /// <summary>
+    /// Appends a base64-encoded image read from a stream.
+    /// </summary>
+    internal void AddImage(Stream imageData, string mimeType, string? alt = null,
+        int maxWidthPercent = 100, ImageAlignment alignment = ImageAlignment.Center, string? caption = null)
+    {
+        using var ms = new MemoryStream();
+        imageData.CopyTo(ms);
+        AddImage(ms.ToArray(), mimeType, alt, maxWidthPercent, alignment, caption);
+    }
+
+    /// <summary>
+    /// Appends an image referenced by an external URL.
+    /// </summary>
+    internal void AddImageFromUrl(string url, string? alt = null,
+        int maxWidthPercent = 100, ImageAlignment alignment = ImageAlignment.Center, string? caption = null)
+    {
+        AppendImageElement(Enc(url), alt, maxWidthPercent, alignment, caption);
+    }
+
+    /// <summary>
+    /// Appends an inline SVG fragment.
+    /// </summary>
+    internal void AddSvg(string svgMarkup, int maxWidthPercent = 100,
+        ImageAlignment alignment = ImageAlignment.Center, string? caption = null)
+    {
+        var alignClass = AlignmentClass(alignment);
+        var containerStyle = maxWidthPercent is > 0 and < 100
+            ? $" style=\"max-width:{maxWidthPercent}%; {AlignmentMargin(alignment)}\""
+            : "";
+
+        _html.AppendLine($"<figure class=\"image-container {alignClass}\"{containerStyle}>");
+        _html.AppendLine(svgMarkup);
+        if (caption != null)
+        {
+            _html.AppendLine($"<figcaption class=\"image-caption\">{Enc(caption)}</figcaption>");
+        }
+        _html.AppendLine("</figure>");
+    }
+
+    // ── Private helpers ─────────────────────────────────────────────────
+
+    private static string AlignmentClass(ImageAlignment alignment) => alignment switch
+    {
+        ImageAlignment.Left => "image-container--left",
+        ImageAlignment.Right => "image-container--right",
+        _ => "image-container--center"
+    };
+
+    // Returns the margin shorthand that positions a constrained block at the desired edge.
+    // text-align only affects inline content; margin is required to align the block itself.
+    private static string AlignmentMargin(ImageAlignment alignment) => alignment switch
+    {
+        ImageAlignment.Left  => "margin-right:auto;",
+        ImageAlignment.Right => "margin-left:auto;",
+        _                    => "margin-left:auto; margin-right:auto;"
+    };
+
+    private void AppendImageElement(string src, string? alt, int maxWidthPercent,
+        ImageAlignment alignment, string? caption)
+    {
+        var alignClass = AlignmentClass(alignment);
         var altAttr = alt != null ? $" alt=\"{Enc(alt)}\"" : "";
-        _html.AppendLine($"<div class=\"image-container\"><img src=\"data:{Enc(mimeType)};base64,{base64}\"{altAttr} /></div>");
+        // max-width constrains the img; text-align on the figure (via CSS class) positions it.
+        var widthStyle = maxWidthPercent is > 0 and < 100 ? $" style=\"max-width:{maxWidthPercent}%;\"" : "";
+
+        _html.AppendLine($"<figure class=\"image-container {alignClass}\">");
+        _html.AppendLine($"<img src=\"{src}\"{altAttr}{widthStyle} />");
+        if (caption != null)
+        {
+            _html.AppendLine($"<figcaption class=\"image-caption\">{Enc(caption)}</figcaption>");
+        }
+        _html.AppendLine("</figure>");
     }
 
     /// <summary>

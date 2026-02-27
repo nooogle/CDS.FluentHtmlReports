@@ -50,6 +50,11 @@ var demos = new (string fileName, string title, string description, Func<string>
      "Complete Feature Showcase",
      "A realistic build pipeline report that exercises every feature in one cohesive document.",
      AllFeaturesDemo.Generate),
+
+    ("06-image-features.html",
+     "Image Features",
+     "Inline SVG, base64 bytes, streams, URL images, sizing, alignment, and captions.",
+     ImageFeaturesDemo.Generate),
 };
 
 foreach (var (fileName, title, _, generate) in demos)
@@ -96,6 +101,7 @@ var indexHtml = Generator
     .AddLink("3. Chart Features — vertical/horizontal bars, pie, donut, line charts", "03-chart-features.html")
     .AddLink("4. Layout Features — KPI cards, progress bars, collapsible sections, columns, page breaks", "04-layout-features.html")
     .AddLink("5. Complete Feature Showcase — all features in one realistic build pipeline report", "05-all-features.html")
+    .AddLink("6. Image Features — inline SVG, base64, streams, URL images, sizing, alignment, captions", "06-image-features.html")
 
     .AddLine()
 
@@ -146,6 +152,12 @@ var indexHtml = Generator
         .BeginColumn()
             .AddHeading("Layout", HeadingLevel.H3)
             .AddUnorderedList([
+                "Base64 image embedding (bytes, stream, file)",
+                "Inline SVG injection",
+                "URL-referenced images",
+                "Image sizing (max-width %)",
+                "Image alignment (left/center/right)",
+                "Figure captions",
                 "KPI summary cards",
                 "Progress bars (auto-colored)",
                 "Collapsible sections (HTML5 details)",

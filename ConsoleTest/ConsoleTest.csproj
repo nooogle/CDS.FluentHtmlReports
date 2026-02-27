@@ -12,4 +12,13 @@
     <ProjectReference Include="..\CDS.FluentHtmlReports\CDS.FluentHtmlReports.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="3.119.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Copy sample image to output directory for the SkiaSharp demo -->
+    <Content Include="..\docs\images\example-report.png" CopyToOutputDirectory="PreserveNewest" Link="Assets\example-report.png" />
+  </ItemGroup>
+
 </Project>
