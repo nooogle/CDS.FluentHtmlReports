@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh pr:*)",
+      "Bash(winget --version)",
+      "Bash(scoop --version)",
+      "Bash(choco --version)",
+      "Bash(scoop install:*)",
+      "Bash(powershell -Command \"scoop install gh\")",
+      "Bash(powershell -Command \"winget --version\")",
+      "Bash(powershell -Command \"choco --version\")",
+      "Bash(powershell -Command \"winget install --id GitHub.cli --silent --accept-package-agreements --accept-source-agreements\")",
+      "Bash(powershell -Command \"gh pr list\")",
+      "Bash(powershell -Command \"& 'C:/Program Files/GitHub CLI/gh.exe' pr list\")",
+      "Bash(powershell -Command \"& 'C:/Program Files/GitHub CLI/gh.exe' pr merge 22 --merge --auto 2>&1; & 'C:/Program Files/GitHub CLI/gh.exe' pr merge 21 --merge --auto 2>&1; & 'C:/Program Files/GitHub CLI/gh.exe' pr merge 20 --merge --auto 2>&1; & 'C:/Program Files/GitHub CLI/gh.exe' pr merge 19 --merge --auto 2>&1; & 'C:/Program Files/GitHub CLI/gh.exe' pr merge 18 --merge --auto 2>&1; & 'C:/Program Files/GitHub CLI/gh.exe' pr merge 17 --merge --auto 2>&1; & 'C:/Program Files/GitHub CLI/gh.exe' pr merge 16 --merge --auto 2>&1; & 'C:/Program Files/GitHub CLI/gh.exe' pr merge 14 --merge --auto 2>&1\")",
+      "Bash(\"C:/Program Files/GitHub CLI/gh.exe\" pr list)",
+      "Bash(\"C:/Program Files/GitHub CLI/gh.exe\" pr view 17)",
+      "Bash(\"C:/Program Files/GitHub CLI/gh.exe\" pr view 17 --json mergeable,mergeStateStatus)",
+      "Bash(\"C:/Program Files/GitHub CLI/gh.exe\" pr merge 17 --merge)",
+      "Bash(\"C:/Program Files/GitHub CLI/gh.exe\" label list)",
+      "Bash('C:/Program Files/GitHub CLI/gh.exe' label create dependencies --description 'Dependency updates' --color 0075ca)",
+      "Bash('C:/Program Files/GitHub CLI/gh.exe' label create nuget --description 'NuGet package updates' --color 004880)",
+      "Bash('C:/Program Files/GitHub CLI/gh.exe' label create github-actions --description 'GitHub Actions updates' --color 000000)"
+    ]
+  }
+}
