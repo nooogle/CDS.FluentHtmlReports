@@ -7,15 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- Comprehensive unit test suite with 64 tests covering all features
-- GitHub Actions CI/CD pipeline for automated builds and releases
-- Code security scanning with CodeQL
-
-### Fixed
-- HTML encoding in `AddParagraph` to prevent XSS vulnerabilities
-- Alert components now include level-specific CSS classes (alert-info, alert-success, etc.)
-- HTML5 standard compliance with lowercase charset attribute
+### Changed
+- Refreshed test dependencies: `coverlet.collector` 10.0.1, `FluentAssertions` 8.10.0, `MSTest.TestAdapter` 4.2.3, and `MSTest.TestFramework` 4.2.3
+- Refreshed demo dependency: `SkiaSharp` 3.119.4
 
 ## [1.0.0] - Initial Release
 
