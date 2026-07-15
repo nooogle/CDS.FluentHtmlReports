@@ -188,7 +188,7 @@ public static class ImageFeaturesDemo
     {
         g.AddLine()
          .AddHeading("SkiaSharp: Real Cross-Platform Image Processing")
-         .AddParagraph("The ConsoleTest project references SkiaSharp (NuGet: SkiaSharp 3.x). The three images below are produced by the private helper methods in this class — they load the sample PNG from disk and apply real pixel operations.")
+         .AddParagraph("The ConsoleTest project references SkiaSharp (NuGet: SkiaSharp 4.x). The three images below are produced by the private helper methods in this class — they load the sample PNG from disk and apply real pixel operations.")
          .AddAlert(AlertLevel.Info, "The library itself (CDS.FluentHtmlReports) has zero dependencies. SkiaSharp is referenced only by this demo project, showing how any caller can integrate a cross-platform image library on Windows, macOS, and Linux.")
          .AddMetadata("Source image", "docs/images/example-report.png")
          .AddMetadata("Dimensions", skia.Dimensions)
@@ -240,7 +240,7 @@ public static class ImageFeaturesDemo
              using var surface = SKSurface.Create(new SKImageInfo(bitmap.Width, bitmap.Height));
              var canvas = surface.Canvas;
 
-             canvas.DrawBitmap(bitmap, 0, 0);
+              canvas.DrawBitmap(bitmap, 0, 0, SKSamplingOptions.Default, null);
 
              using var font  = new SKFont(SKTypeface.Default, size: 72);
              using var paint = new SKPaint { Color = new SKColor(200, 30, 30, 140), IsAntialias = true };
@@ -249,7 +249,7 @@ public static class ImageFeaturesDemo
              canvas.Save();
              canvas.Translate(bitmap.Width / 2f, bitmap.Height / 2f);
              canvas.RotateDegrees(-35);
-             canvas.DrawText("DRAFT", -textWidth / 2f, font.Size / 3f, font, paint);
+              canvas.DrawText("DRAFT", -textWidth / 2f, font.Size / 3f, SKTextAlign.Left, font, paint);
              canvas.Restore();
 
              using var image = surface.Snapshot();
@@ -486,7 +486,7 @@ public static class ImageFeaturesDemo
         var canvas = surface.Canvas;
 
         // Draw the original image as the background
-        canvas.DrawBitmap(bitmap, 0, 0);
+        canvas.DrawBitmap(bitmap, 0, 0, SKSamplingOptions.Default, null);
 
         // Composite a diagonal text watermark
         using var font  = new SKFont(SKTypeface.Default, size: 72);
@@ -496,7 +496,7 @@ public static class ImageFeaturesDemo
         canvas.Save();
         canvas.Translate(bitmap.Width / 2f, bitmap.Height / 2f);
         canvas.RotateDegrees(-35);
-        canvas.DrawText(text, -textWidth / 2f, font.Size / 3f, font, paint);
+        canvas.DrawText(text, -textWidth / 2f, font.Size / 3f, SKTextAlign.Left, font, paint);
         canvas.Restore();
 
         using var image = surface.Snapshot();
