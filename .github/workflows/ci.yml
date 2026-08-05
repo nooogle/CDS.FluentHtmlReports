@@ -56,14 +56,6 @@ jobs:
       with:
         name: coverage-report
         path: '**/coverage.cobertura.xml'
-    
-    - name: Publish coverage to Codecov
-      if: matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v7
-      with:
-        files: '**/coverage.cobertura.xml'
-        fail_ci_if_error: false
-        token: ${{ secrets.CODECOV_TOKEN }}
 
   dependency-review:
     name: Dependency Review
