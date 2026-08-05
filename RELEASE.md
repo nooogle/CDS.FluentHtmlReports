@@ -28,7 +28,7 @@ The project uses [MinVer](https://github.com/adamralph/minver) for automatic sem
 ### Version Format
 
 Follow [Semantic Versioning](https://semver.org/):
-- `v{MAJOR}.{MINOR}.{PATCH}` (e.g., `v1.0.0`, `v2.1.3`)
+- `V{MAJOR}.{MINOR}.{PATCH}` (uppercase `V`, e.g., `V1.0.0`, `V2.1.3`)
 
 **When to increment:**
 - **MAJOR**: Breaking API changes
@@ -56,15 +56,15 @@ Follow [Semantic Versioning](https://semver.org/):
 4. **Commit the CHANGELOG update**
    ```bash
    git add CHANGELOG.md
-   git commit -m "Prepare v1.2.3 release"
+   git commit -m "Prepare V1.2.3 release"
    git push origin master
    ```
 
 5. **Create and push the version tag**
    ```bash
    # For version 1.2.3:
-   git tag v1.2.3
-   git push origin v1.2.3
+   git tag V1.2.3
+   git push origin V1.2.3
    ```
 
 6. **GitHub Actions will automatically:**
@@ -86,16 +86,16 @@ For pre-release versions (alpha, beta, RC):
 
 ```bash
 # Create a tag with pre-release identifier
-git tag v1.2.3-alpha.1
-git push origin v1.2.3-alpha.1
+git tag V1.2.3-alpha.1
+git push origin V1.2.3-alpha.1
 
 # Or
-git tag v1.2.3-beta.1
-git push origin v1.2.3-beta.1
+git tag V1.2.3-beta.1
+git push origin V1.2.3-beta.1
 
 # Or
-git tag v1.2.3-rc.1
-git push origin v1.2.3-rc.1
+git tag V1.2.3-rc.1
+git push origin V1.2.3-rc.1
 ```
 
 MinVer will automatically mark these as pre-release versions in NuGet.
@@ -153,7 +153,7 @@ minver
 ### Version is not what you expected
 - MinVer calculates version from git tags
 - Ensure you've fetched all tags: `git fetch --tags`
-- Check tag format follows `v{major}.{minor}.{patch}`
+- Check tag format follows `V{major}.{minor}.{patch}` (uppercase `V`)
 - View all tags: `git tag -l`
 
 ### Tests fail during release

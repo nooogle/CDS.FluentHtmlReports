@@ -76,8 +76,8 @@ git push origin master
 # 2. Wait for CI to pass (check Actions tab)
 
 # 3. Create and push a version tag
-git tag v1.0.0
-git push origin v1.0.0
+git tag V1.0.0
+git push origin V1.0.0
 ```
 
 **GitHub Actions will automatically:**
@@ -157,14 +157,14 @@ git push origin feature/my-feature
 # 1. Update CHANGELOG.md
 # 2. Commit changelog
 git add CHANGELOG.md
-git commit -m "Prepare v1.2.3 release"
+git commit -m "Prepare V1.2.3 release"
 git push origin master
 
 # 3. Wait for CI to pass
 
 # 4. Create tag
-git tag v1.2.3
-git push origin v1.2.3
+git tag V1.2.3
+git push origin V1.2.3
 
 # 5. Watch GitHub Actions release automatically!
 ```

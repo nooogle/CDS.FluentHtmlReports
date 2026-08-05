@@ -73,4 +73,4 @@ From `.github/copilot-instructions.md`:
 
 ## Versioning & Release
 
-Version is derived automatically from git tags via **MinVer**. A release is triggered by pushing a `v*.*.*` tag, which runs CI → pack → publish to NuGet.
+Version is derived automatically from git tags via **MinVer**. A release is triggered by pushing a `V*.*.*` tag (uppercase), which runs CI → pack → publish to NuGet.

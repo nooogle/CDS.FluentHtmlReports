@@ -32,10 +32,10 @@ Automatically scans code for security vulnerabilities using GitHub's CodeQL.
 ```
 
 ### 📦 Release Automation
-**Triggers:** Git tags matching `v*.*.*`
+**Triggers:** Git tags matching `V*.*.*` (uppercase)
 **Workflow:** `.github/workflows/release.yml`
 
-When you push a version tag (e.g., `v1.2.3`), GitHub Actions will:
+When you push a version tag (e.g., `V1.2.3`), GitHub Actions will:
 1. Build and test the project
 2. Create a NuGet package
 3. Create a GitHub Release with auto-generated notes
@@ -110,13 +110,13 @@ See [RELEASE.md](RELEASE.md) for detailed instructions.
 ```bash
 # Commit all changes
 git add .
-git commit -m "Prepare v1.2.3 release"
+git commit -m "Prepare V1.2.3 release"
 git push origin master
 
 # Wait for CI to pass
 # Then create and push the tag
-git tag v1.2.3
-git push origin v1.2.3
+git tag V1.2.3
+git push origin V1.2.3
 
 # GitHub Actions does the rest!
 ```

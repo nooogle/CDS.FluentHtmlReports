@@ -83,14 +83,14 @@ This project follows the guidelines in `.github/copilot-instructions.md`:
 
 This project uses [MinVer](https://github.com/adamralph/minver) for automatic semantic versioning based on git tags:
 
-- Version is derived from git tags (e.g., `v1.2.3`)
-- Tag format: `v{major}.{minor}.{patch}`
+- Version is derived from git tags (e.g., `V1.2.3`)
+- Tag format: `V{major}.{minor}.{patch}` (uppercase `V`)
 - Maintainers create tags for releases
 
 ## Release Process
 
 1. Update `CHANGELOG.md` with release notes
-2. Create and push a version tag: `git tag v1.2.3 && git push origin v1.2.3`
+2. Create and push a version tag: `git tag V1.2.3 && git push origin V1.2.3`
 3. GitHub Actions automatically:
    - Builds and tests the project
    - Creates a GitHub release with generated notes

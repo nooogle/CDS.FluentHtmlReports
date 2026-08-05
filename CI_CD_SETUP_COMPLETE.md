@@ -11,7 +11,7 @@ Your repository is now fully configured with automated build, test, and release 
   - Generates code coverage reports
   
 - **`.github/workflows/release.yml`** - Automated Releases
-  - Triggered by version tags (e.g., `v1.0.0`)
+  - Triggered by version tags (e.g., `V1.0.0`)
   - Creates NuGet packages
   - Publishes to NuGet.org
   - Creates GitHub releases with auto-generated notes
@@ -105,12 +105,12 @@ When you're ready to release:
 # Update CHANGELOG.md with your changes
 # Then commit
 git add CHANGELOG.md
-git commit -m "Prepare v1.0.0 release"
+git commit -m "Prepare V1.0.0 release"
 git push origin master
 
 # Create and push a version tag
-git tag v1.0.0
-git push origin v1.0.0
+git tag V1.0.0
+git push origin V1.0.0
 
 # GitHub Actions will automatically:
 # ✅ Build and test
@@ -148,7 +148,7 @@ After the first CI run, these badges will be active:
 - Early warning of potential issues
 
 ### 📦 Easy Releases
-- One command to release: `git tag v1.2.3 && git push origin v1.2.3`
+- One command to release: `git tag V1.2.3 && git push origin V1.2.3`
 - Automatic NuGet publishing
 - GitHub releases with auto-generated notes
 - Attached `.nupkg` files
@@ -175,7 +175,7 @@ After the first CI run, these badges will be active:
 1. **Branch Protection**: Go to Settings → Branches and require CI to pass before merging
 2. **Auto-merge Dependabot**: Enable Dependabot to keep dependencies updated
 3. **Release Notes**: Edit auto-generated release notes to add highlights
-4. **Pre-releases**: Tag with `v1.0.0-beta.1` for beta releases
+4. **Pre-releases**: Tag with `V1.0.0-beta.1` for beta releases
 
 ## 🆘 Troubleshooting
 

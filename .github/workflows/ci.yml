@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master, main, develop ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, main ]
+    branches: [ master ]
   workflow_dispatch:
 
 env:
@@ -64,3 +64,11 @@ jobs:
         files: '**/coverage.cobertura.xml'
         fail_ci_if_error: false
         token: ${{ secrets.CODECOV_TOKEN }}
+
+  dependency-review:
+    name: Dependency Review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/dependency-review-action@v5.0.0   # no floating v5 tag upstream — pin exact, verify with git ls-remote before bumping

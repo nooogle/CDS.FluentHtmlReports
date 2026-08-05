@@ -2,9 +2,9 @@ name: CodeQL Security Scan
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, main ]
+    branches: [ master ]
   schedule:
     - cron: '0 0 * * 1'  # Run weekly on Mondays
 
