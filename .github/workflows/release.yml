@@ -68,15 +68,19 @@ jobs:
         dotnet tool install --global CycloneDX
         dotnet-CycloneDX CDS.FluentHtmlReports/CDS.FluentHtmlReports.csproj -o ./artifacts -F json -sv ${{ steps.get_version.outputs.VERSION }}
 
+    # actions/attest-build-provenance and actions/attest-sbom are both now thin wrappers over
+    # actions/attest (which auto-detects provenance vs. SBOM mode from whether sbom-path is
+    # set) - attest-sbom specifically logs a runtime deprecation warning, so both steps below
+    # use the unified action directly instead.
     - name: Attest build provenance
       if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/attest-build-provenance@v4
+      uses: actions/attest@v4
       with:
         subject-path: ./artifacts/*.nupkg
 
     - name: Attest SBOM
       if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/attest-sbom@v4
+      uses: actions/attest@v4
       with:
         subject-path: ./artifacts/*.nupkg
         sbom-path: ./artifacts/bom.json
