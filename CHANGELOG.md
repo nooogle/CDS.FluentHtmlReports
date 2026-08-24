@@ -25,6 +25,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for .NET 8 and .NET 10
 - Self-contained HTML output (inline CSS, SVG charts)
 - Print-friendly styling with media queries
-
-[Unreleased]: https://github.com/nooogle/CDS.FluentHtmlReports/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/nooogle/CDS.FluentHtmlReports/releases/tag/v1.0.0
