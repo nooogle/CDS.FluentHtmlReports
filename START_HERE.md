@@ -226,7 +226,7 @@ Look in `.github/workflows/` for the YAML files
 
 **Release not publishing?**
 - Verify `NUGET_API_KEY` secret exists
-- Check tag format: `v{major}.{minor}.{patch}`
+- Check tag format: `V{major}.{minor}.{patch}` (uppercase `V` — must match `MinVerTagPrefix`)
 - View workflow log for errors
 
 **Badges not showing?**
