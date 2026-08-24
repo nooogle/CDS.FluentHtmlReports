@@ -185,7 +185,7 @@ After the first CI run, these badges will be active:
 
 ### Release not publishing?
 - Verify `NUGET_API_KEY` secret is set
-- Check tag format: must be `v{major}.{minor}.{patch}`
+- Check tag format: must be `V{major}.{minor}.{patch}` (uppercase `V` — must match `MinVerTagPrefix`)
 - View workflow logs in Actions tab
 
 ### Badge not showing?

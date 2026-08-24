@@ -30,7 +30,7 @@ updates:
       include: "scope"
     labels:
       - "dependencies"
-      - "github-actions"
+      - "github_actions"
     reviewers:
       - "nooogle"
     assignees:

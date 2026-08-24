@@ -146,7 +146,7 @@ https://codecov.io/gh/nooogle/CDS.FluentHtmlReports
 ### Release Not Publishing?
 1. Verify `NUGET_API_KEY` is set in repository secrets
 2. Check the Release workflow in Actions tab
-3. Ensure tag format is correct: `v{major}.{minor}.{patch}`
+3. Ensure tag format is correct: `V{major}.{minor}.{patch}` (uppercase `V` — must match `MinVerTagPrefix`)
 4. Check NuGet.org for any issues
 
 ### Badge Not Showing?
