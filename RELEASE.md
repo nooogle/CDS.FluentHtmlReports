@@ -47,27 +47,14 @@ Follow [Semantic Versioning](https://semver.org/):
    - Check: https://github.com/nooogle/CDS.FluentHtmlReports/actions
    - Ensure all tests pass on all platforms
 
-3. **Update CHANGELOG.md**
-   ```bash
-   # Move items from [Unreleased] to new version section
-   # Add date and update comparison links
-   ```
-
-4. **Commit the CHANGELOG update**
-   ```bash
-   git add CHANGELOG.md
-   git commit -m "Prepare V1.2.3 release"
-   git push origin master
-   ```
-
-5. **Create and push the version tag**
+3. **Create and push the version tag**
    ```bash
    # For version 1.2.3:
    git tag V1.2.3
    git push origin V1.2.3
    ```
 
-6. **GitHub Actions will automatically:**
+4. **GitHub Actions will automatically:**
    - Build the project
    - Run all tests
    - Create NuGet package
@@ -75,7 +62,7 @@ Follow [Semantic Versioning](https://semver.org/):
    - Publish to NuGet.org
    - Attach the `.nupkg` file to the GitHub release
 
-7. **Verify the release**
+5. **Verify the release**
    - Check GitHub releases: https://github.com/nooogle/CDS.FluentHtmlReports/releases
    - Check NuGet.org: https://www.nuget.org/packages/CDS.FluentHtmlReports
    - The package may take 5-10 minutes to appear in search after publishing

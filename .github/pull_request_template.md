@@ -46,7 +46,6 @@ Closes #(issue number)
 - [ ] I have added XML documentation for public APIs
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] All tests pass locally
-- [ ] I have updated CHANGELOG.md under `[Unreleased]`
 - [ ] I have updated README.md if needed
 
 ## Additional Notes

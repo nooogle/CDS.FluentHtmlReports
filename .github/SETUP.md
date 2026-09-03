@@ -156,7 +156,6 @@ https://codecov.io/gh/nooogle/CDS.FluentHtmlReports
 
 ## 📚 Additional Files
 
-- **CHANGELOG.md** - Track all changes by version
 - **CONTRIBUTING.md** - Guidelines for contributors
 - **RELEASE.md** - Detailed release process guide
 - **.github/ISSUE_TEMPLATE/** - Bug report and feature request templates
@@ -166,10 +165,9 @@ https://codecov.io/gh/nooogle/CDS.FluentHtmlReports
 
 1. **Never commit directly to master** - Use branches and PRs
 2. **Wait for CI to pass** - Don't merge failing PRs
-3. **Update CHANGELOG.md** - Document all changes
-4. **Write tests** - All new features need tests
-5. **Follow semantic versioning** - MAJOR.MINOR.PATCH
-6. **Review generated release notes** - Edit if needed
+3. **Write tests** - All new features need tests
+4. **Follow semantic versioning** - MAJOR.MINOR.PATCH
+5. **Write a descriptive PR title** - it becomes the generated release note
 
 ## 🆘 Need Help?
 
