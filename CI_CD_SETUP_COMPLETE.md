@@ -21,7 +21,6 @@ Your repository is now fully configured with automated build, test, and release 
   - Runs on push, PRs, and weekly schedule
 
 ### Documentation
-- **`CHANGELOG.md`** - Version history tracking
 - **`CONTRIBUTING.md`** - Contributor guidelines
 - **`RELEASE.md`** - Detailed release process guide
 - **`.github/SETUP.md`** - Quick start guide for CI/CD
@@ -102,12 +101,6 @@ You'll see the CI workflow run automatically!
 When you're ready to release:
 
 ```bash
-# Update CHANGELOG.md with your changes
-# Then commit
-git add CHANGELOG.md
-git commit -m "Prepare V1.0.0 release"
-git push origin master
-
 # Create and push a version tag
 git tag V1.0.0
 git push origin V1.0.0

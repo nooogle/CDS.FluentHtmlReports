@@ -29,8 +29,7 @@ Be respectful, constructive, and professional in all interactions.
 3. **Add tests** for any new functionality
 4. **Ensure all tests pass**: `dotnet test`
 5. **Update documentation** in README.md if needed
-6. **Update CHANGELOG.md** under the `[Unreleased]` section
-7. **Submit a pull request**
+6. **Submit a pull request** with a descriptive title — it becomes the generated release note
 
 ## Development Setup
 
@@ -89,9 +88,8 @@ This project uses [MinVer](https://github.com/adamralph/minver) for automatic se
 
 ## Release Process
 
-1. Update `CHANGELOG.md` with release notes
-2. Create and push a version tag: `git tag V1.2.3 && git push origin V1.2.3`
-3. GitHub Actions automatically:
+1. Create and push a version tag: `git tag V1.2.3 && git push origin V1.2.3`
+2. GitHub Actions automatically:
    - Builds and tests the project
    - Creates a GitHub release with generated notes
    - Publishes the NuGet package

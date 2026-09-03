@@ -154,15 +154,9 @@ git push origin feature/my-feature
 ### Release Workflow
 
 ```bash
-# 1. Update CHANGELOG.md
-# 2. Commit changelog
-git add CHANGELOG.md
-git commit -m "Prepare V1.2.3 release"
-git push origin master
+# 1. Wait for CI to pass
 
-# 3. Wait for CI to pass
-
-# 4. Create tag
+# 2. Create tag
 git tag V1.2.3
 git push origin V1.2.3
 
@@ -174,7 +168,6 @@ git push origin V1.2.3
 ## 📖 Documentation You Now Have
 
 - **README.md** - Updated with CI/CD badges
-- **CHANGELOG.md** - Track version changes
 - **CONTRIBUTING.md** - Guide for contributors
 - **RELEASE.md** - Detailed release instructions
 - **.github/SETUP.md** - CI/CD quick start
