@@ -160,7 +160,7 @@ git push origin feature/my-feature
 git tag V1.2.3
 git push origin V1.2.3
 
-# 5. Watch GitHub Actions release automatically!
+# 3. Watch GitHub Actions release automatically!
 ```
 
 ---

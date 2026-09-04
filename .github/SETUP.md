@@ -167,7 +167,7 @@ https://codecov.io/gh/nooogle/CDS.FluentHtmlReports
 2. **Wait for CI to pass** - Don't merge failing PRs
 3. **Write tests** - All new features need tests
 4. **Follow semantic versioning** - MAJOR.MINOR.PATCH
-5. **Write a descriptive PR title** - it becomes the generated release note
+5. **Write a descriptive PR title** - GitHub's auto-generated release notes list merged PRs by title
 
 ## 🆘 Need Help?
 
