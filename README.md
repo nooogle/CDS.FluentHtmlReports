@@ -247,7 +247,11 @@ dotnet pack -c Release
 
 The `.nupkg` will be in `CDS.FluentHtmlReports/bin/Release/`.
 
+## Documentation
 
+- [CONTRIBUTING.md](CONTRIBUTING.md) — coding guidelines and how to raise a pull request
+- [RELEASE.md](RELEASE.md) — how a version is tagged, packed and published to NuGet
+- [.github/SETUP.md](.github/SETUP.md) — what CI/CD automates, and the repository secrets it needs
 
 ## License
 

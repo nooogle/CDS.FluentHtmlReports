@@ -104,7 +104,7 @@ git push origin feature/my-new-feature
 
 ### Releasing a New Version
 
-See [RELEASE.md](RELEASE.md) for detailed instructions.
+See [RELEASE.md](../RELEASE.md) for detailed instructions.
 
 **Quick version:**
 ```bash
