@@ -1,5 +1,5 @@
 using CDS.FluentHtmlReports;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CDS.FluentHtmlReports.Tests;
