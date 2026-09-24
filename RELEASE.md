@@ -1,156 +1,85 @@
 # Release Process Guide
 
-This document describes how to create and publish new releases of CDS.FluentHtmlReports.
+How to publish a new version of CDS.FluentHtmlReports.
 
-## Prerequisites
+## How it works
 
-### First-Time Setup
+Pushing a tag matching `V*.*.*` runs [`.github/workflows/release.yml`](.github/workflows/release.yml), which:
 
-1. **NuGet API Key**
-   - Go to https://www.nuget.org/account/apikeys
-   - Create a new API key with "Push" permissions for this package
-   - Add it as a GitHub secret named `NUGET_API_KEY`:
-     - Go to: https://github.com/nooogle/CDS.FluentHtmlReports/settings/secrets/actions
-     - Click "New repository secret"
-     - Name: `NUGET_API_KEY`
-     - Value: Your NuGet API key
+1. Builds and runs all tests (Release configuration)
+2. Packs the NuGet package — the version comes from the tag via [MinVer](https://github.com/adamralph/minver)
+3. Generates a CycloneDX SBOM and attests build provenance and the SBOM
+4. Creates a GitHub Release with generated notes, attaching the `.nupkg` and `bom.json`
+5. Publishes to NuGet.org using [Trusted Publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing) (OIDC — no long-lived API key)
 
-2. **Codecov Token (Optional for code coverage)**
-   - Go to https://codecov.io and sign in with GitHub
-   - Add your repository
-   - Copy the upload token
-   - Add it as a GitHub secret named `CODECOV_TOKEN`
+## One-time setup
 
-## Creating a Release
+Already done for this repo; listed so it can be checked or rebuilt.
 
-The project uses [MinVer](https://github.com/adamralph/minver) for automatic semantic versioning based on git tags.
+- **nuget.org trusted publishing policy** for owner `nooogle`, repository `CDS.FluentHtmlReports`, workflow `release.yml`, environment `nuget`.
+- **GitHub environment** `nuget` — the release job runs in it.
+- **Repository secret** `NUGET_USER` — the nuget.org account name the policy belongs to. This is not an API key; the short-lived key is issued per run by `NuGet/login`.
 
-### Version Format
+## Versioning
 
-Follow [Semantic Versioning](https://semver.org/):
-- `V{MAJOR}.{MINOR}.{PATCH}` (uppercase `V`, e.g., `V1.0.0`, `V2.1.3`)
+[Semantic Versioning](https://semver.org/), tagged as `V{MAJOR}.{MINOR}.{PATCH}` with an **uppercase `V`** — a lowercase `v` tag does not trigger the workflow.
 
-**When to increment:**
-- **MAJOR**: Breaking API changes
-- **MINOR**: New features (backward compatible)
-- **PATCH**: Bug fixes (backward compatible)
+- **MAJOR** — breaking API or behaviour changes
+- **MINOR** — new features, backward compatible
+- **PATCH** — bug fixes, backward compatible
 
-### Step-by-Step Release Process
+Between tags MinVer derives pre-release versions from commit height, so only tag when deliberately cutting a release.
 
-1. **Ensure all changes are committed and pushed**
+## Release notes
+
+There is no `CHANGELOG.md`. The GitHub Release is the release record: its notes list the PRs merged since the previous tag, by title, grouped by label using [`.github/release.yml`](.github/release.yml).
+
+So before merging a PR that will ship:
+
+- **Give it a descriptive title** — that title is the release note.
+- **Label it** — `breaking-change`, `bug`, `enhancement` or `documentation`. Dependabot labels its own PRs `dependencies`. Unlabelled PRs appear under *Other changes*; `ignore-for-release` leaves a PR out.
+
+If a release changes behaviour in a way users must act on, edit the GitHub Release after it is created and add a short note above the generated list.
+
+## Creating a release
+
+1. Merge the PRs to `master` and check CI is green.
+2. Tag and push:
    ```bash
-   git status
-   git push origin master
-   ```
-
-2. **Wait for CI to pass**
-   - Check: https://github.com/nooogle/CDS.FluentHtmlReports/actions
-   - Ensure all tests pass on all platforms
-
-3. **Create and push the version tag**
-   ```bash
-   # For version 1.2.3:
+   git checkout master
+   git pull
+   git tag --list "V*" --sort=-v:refname   # find the latest
    git tag V1.2.3
    git push origin V1.2.3
    ```
+3. Watch the run: https://github.com/nooogle/CDS.FluentHtmlReports/actions/workflows/release.yml
+4. Verify:
+   - GitHub Release: https://github.com/nooogle/CDS.FluentHtmlReports/releases
+   - NuGet: https://www.nuget.org/packages/CDS.FluentHtmlReports (can take 5–10 minutes to be searchable)
 
-4. **GitHub Actions will automatically:**
-   - Build the project
-   - Run all tests
-   - Create NuGet package
-   - Create GitHub release with auto-generated notes
-   - Publish to NuGet.org
-   - Attach the `.nupkg` file to the GitHub release
+Never delete and re-push a published tag — nuget.org will not accept the same version twice.
 
-5. **Verify the release**
-   - Check GitHub releases: https://github.com/nooogle/CDS.FluentHtmlReports/releases
-   - Check NuGet.org: https://www.nuget.org/packages/CDS.FluentHtmlReports
-   - The package may take 5-10 minutes to appear in search after publishing
-
-## Pre-release Versions
-
-For pre-release versions (alpha, beta, RC):
+## Pre-release versions
 
 ```bash
-# Create a tag with pre-release identifier
-git tag V1.2.3-alpha.1
-git push origin V1.2.3-alpha.1
-
-# Or
 git tag V1.2.3-beta.1
 git push origin V1.2.3-beta.1
-
-# Or
-git tag V1.2.3-rc.1
-git push origin V1.2.3-rc.1
 ```
 
-MinVer will automatically mark these as pre-release versions in NuGet.
+MinVer marks the package as a pre-release. The GitHub Release is still created as a normal release; edit it and tick *Set as a pre-release* if needed.
 
-## Manual Release (Emergency)
+## Rolling back
 
-If the automatic workflow fails, you can manually release:
+NuGet packages cannot be deleted, only unlisted:
 
-```bash
-# Build and pack
-dotnet build --configuration Release
-dotnet pack --configuration Release --output ./artifacts
-
-# Push to NuGet
-dotnet nuget push ./artifacts/CDS.FluentHtmlReports.*.nupkg \
-  --api-key YOUR_NUGET_API_KEY \
-  --source https://api.nuget.org/v3/index.json
-```
-
-## Rolling Back a Release
-
-**NuGet packages cannot be deleted**, but you can unlist them:
-
-1. Go to https://www.nuget.org/packages/CDS.FluentHtmlReports
-2. Click "Manage Package"
-3. Select the version and click "Unlist"
-4. The version will no longer appear in search or package manager UIs
-5. Create a new patch version with the fix
-
-## Checking Current Version
-
-The version is calculated from git tags by MinVer:
-
-```bash
-# See the current calculated version
-dotnet build --verbosity normal | grep MinVer
-
-# Or use MinVer CLI
-dotnet tool install --global minver-cli
-minver
-```
+1. https://www.nuget.org/packages/CDS.FluentHtmlReports → **Manage Package**
+2. Select the version → **Unlist**
+3. Release a fixed patch version
 
 ## Troubleshooting
 
-### Build fails on release
-- Check the GitHub Actions log
-- Ensure all dependencies are properly referenced
-- Verify the project builds locally: `dotnet build --configuration Release`
-
-### NuGet push fails
-- Verify your API key is correctly set in GitHub secrets
-- Check if the version already exists on NuGet.org
-- Ensure the API key has "Push" permissions
-
-### Version is not what you expected
-- MinVer calculates version from git tags
-- Ensure you've fetched all tags: `git fetch --tags`
-- Check tag format follows `V{major}.{minor}.{patch}` (uppercase `V`)
-- View all tags: `git tag -l`
-
-### Tests fail during release
-- Fix the tests first!
-- Never bypass failing tests to create a release
-- If urgent, fix and create a patch release
-
-## Additional Resources
-
-- [Semantic Versioning](https://semver.org/)
-- [Keep a Changelog](https://keepachangelog.com/)
-- [MinVer Documentation](https://github.com/adamralph/minver)
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- **Workflow didn't start** — check the tag starts with an uppercase `V` and was pushed (`git push origin <tag>`; a plain `git push` does not push tags).
+- **Version isn't what you expected** — MinVer needs the tags locally: `git fetch --tags`. CI checks out with `fetch-depth: 0` for the same reason.
+- **NuGet login fails** — check the trusted publishing policy on nuget.org still matches the repository, workflow file name and environment, and that `NUGET_USER` is set.
+- **NuGet push reports the version exists** — the push uses `--skip-duplicate`, so re-running an already-published tag succeeds without publishing anything. Cut a new version instead.
+- **Tests fail during release** — fix them and release a new patch; never bypass failing tests.
