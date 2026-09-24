@@ -32,7 +32,7 @@ public class Generator
     {
         var generator = new Generator();
         AppendDocumentStart(generator._html, title);
-        generator._html.AppendLine($"<h1>{title}</h1>");
+        generator._html.AppendLine($"<h1>{HtmlHelpers.Enc(title)}</h1>");
         return generator;
     }
 
@@ -513,7 +513,7 @@ public class Generator
         html.AppendLine("<head>");
         html.AppendLine("<meta charset=\"utf-8\">");
         html.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
-        html.AppendLine($"<title>{title}</title>");
+        html.AppendLine($"<title>{HtmlHelpers.Enc(title)}</title>");
         html.AppendLine("<style>");
         AppendStyles(html);
         html.AppendLine("</style>");

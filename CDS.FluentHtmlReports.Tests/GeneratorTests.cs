@@ -263,6 +263,83 @@ public class GeneratorTests
 
     [TestMethod]
     [TestCategory("Chart")]
+    public void AddVerticalBarChart_SmallMaximum_UsesWholeNumberAxisSteps()
+    {
+        var html = Generator.Create("Test")
+            .AddVerticalBarChart("Counts", [("A", 1), ("B", 2)])
+            .Generate();
+
+        AxisLabels(html).Should().Equal("0", "1", "2");
+    }
+
+    [TestMethod]
+    [TestCategory("Chart")]
+    public void AddHorizontalBarChart_UsesNiceAxisSteps()
+    {
+        var html = Generator.Create("Test")
+            .AddHorizontalBarChart("Counts", [("A", 7)])
+            .Generate();
+
+        AxisLabels(html).Should().Equal("0", "2", "4", "6", "8");
+    }
+
+    [TestMethod]
+    [TestCategory("Chart")]
+    public void AddLineChart_UsesNiceAxisSteps()
+    {
+        var html = Generator.Create("Test")
+            .AddLineChart("Trend", [("Jan", 40), ("Feb", 100)])
+            .Generate();
+
+        AxisLabels(html).Should().Equal("0", "25", "50", "75", "100");
+    }
+
+    [TestMethod]
+    [TestCategory("Chart")]
+    public void AddHorizontalBarChart_WidensMarginForLongLabel()
+    {
+        var html = Generator.Create("Test")
+            .AddHorizontalBarChart("Inspections", [("IVMS.DemoInspection", 3)])
+            .Generate();
+
+        html.Should().Contain(">IVMS.DemoInspection</text>");
+        html.Should().MatchRegex(@"<rect x=""(1[5-9]\d|[2-9]\d\d)""");
+    }
+
+    [TestMethod]
+    [TestCategory("Chart")]
+    public void AddHorizontalBarChart_TruncatesOversizedLabelWithTooltip()
+    {
+        var label = new string('X', 100);
+
+        var html = Generator.Create("Test")
+            .AddHorizontalBarChart("Inspections", [(label, 3)])
+            .Generate();
+
+        html.Should().Contain($"<title>{label}</title>");
+        html.Should().Contain("…</text>");
+    }
+
+    [TestMethod]
+    [TestCategory("Chart")]
+    public void AddVerticalBarChart_LargeValues_DoNotOverflow()
+    {
+        var html = Generator.Create("Test")
+            .AddVerticalBarChart("Big", [("A", int.MaxValue), ("B", 50_000_000)])
+            .Generate();
+
+        AxisLabels(html).Should().Equal("0", "1000000000", "2000000000", "3000000000");
+        html.Should().NotMatchRegex(@"<rect [^>]*(y|height)=""-");
+    }
+
+    private static string[] AxisLabels(string html) =>
+        System.Text.RegularExpressions.Regex
+            .Matches(html, @"font-size=""11"" fill=""#888"">(\d+)</text>")
+            .Select(m => m.Groups[1].Value)
+            .ToArray();
+
+    [TestMethod]
+    [TestCategory("Chart")]
     public void AddPieChart_IncludesLabels()
     {
         var data = new[]
@@ -408,6 +485,56 @@ public class GeneratorTests
 
         html.Should().Contain("&lt;important&gt;");
         html.Should().NotContain("<important>");
+    }
+
+    [TestMethod]
+    [TestCategory("Security")]
+    public void Create_EncodesTitle()
+    {
+        var html = Generator.Create("A & B <script>").Generate();
+
+        html.Should().Contain("<title>A &amp; B &lt;script&gt;</title>");
+        html.Should().Contain("<h1>A &amp; B &lt;script&gt;</h1>");
+        html.Should().NotContain("<script>");
+    }
+
+    [TestMethod]
+    [TestCategory("Security")]
+    public void AddHeading_EncodesText()
+    {
+        var html = Generator.Create("Test")
+            .AddHeading("<b>Bold</b> & more")
+            .Generate();
+
+        html.Should().Contain("<h2>&lt;b&gt;Bold&lt;/b&gt; &amp; more</h2>");
+    }
+
+    [TestMethod]
+    [TestCategory("Security")]
+    public void AddMetadata_EncodesLabelAndValue()
+    {
+        var html = Generator.Create("Test")
+            .AddMetadata("<label>", "<value>")
+            .Generate();
+
+        html.Should().Contain("&lt;label&gt;");
+        html.Should().Contain("&lt;value&gt;");
+        html.Should().NotContain("<label>");
+        html.Should().NotContain("<value>");
+    }
+
+    [TestMethod]
+    [TestCategory("Security")]
+    public void AddLabelValueRow_EncodesLabelsAndValues()
+    {
+        var html = Generator.Create("Test")
+            .AddLabelValueRow([("<label>", "<value>")])
+            .Generate();
+
+        html.Should().Contain("&lt;label&gt;");
+        html.Should().Contain("&lt;value&gt;");
+        html.Should().NotContain("<label>");
+        html.Should().NotContain("<value>");
     }
 
     // ── Edge Cases ─────────────────────────────────────────────────────

@@ -67,11 +67,12 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
                          $"width=\"100%\" height=\"{svgHeight}\" preserveAspectRatio=\"xMinYMin meet\" " +
                          "xmlns=\"http://www.w3.org/2000/svg\">");
 
-        const int gridLines = 4;
+        var (step, gridLines) = GetAxisScale(maxValue);
+        long axisMax = step * gridLines;
         for (int i = 0; i <= gridLines; i++)
         {
             int y = marginTop + chartHeight - (i * chartHeight / gridLines);
-            int gridValue = maxValue * i / gridLines;
+            long gridValue = step * i;
 
             _html.AppendLine($"<line x1=\"{marginLeft}\" y1=\"{y}\" " +
                              $"x2=\"{svgWidth - marginRight}\" y2=\"{y}\" " +
@@ -92,7 +93,7 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
         for (int i = 0; i < data.Length; i++)
         {
             int barX = startX + i * (barWidth + gap);
-            int barHeight = maxValue > 0 ? data[i].value * chartHeight / maxValue : 0;
+            int barHeight = (int)((long)data[i].value * chartHeight / axisMax);
             int barY = marginTop + chartHeight - barHeight;
             int centerX = barX + barWidth / 2;
 
@@ -142,7 +143,6 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
 
         var alignment = GetAlignmentStyle();
 
-        const int marginLeft = 120;
         const int marginTop = 30;
         const int marginBottom = 30;
         const int marginRight = 50;
@@ -152,6 +152,13 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
 
         const int containerWidth = 900;
         int svgWidth = containerWidth * effectiveWidthPercent / 100;
+
+        // SVG cannot measure text without script, so label width is estimated from the character count.
+        const double labelCharWidth = 7.5;
+        const int labelPadding = 16;
+        int longestLabel = data.Max(d => d.label?.Length ?? 0);
+        int marginLeft = Math.Min(Math.Max(120, (int)Math.Ceiling(longestLabel * labelCharWidth) + labelPadding), Math.Max(120, svgWidth * 2 / 5));
+        int maxLabelChars = (int)((marginLeft - labelPadding) / labelCharWidth);
         int chartWidth = svgWidth - marginLeft - marginRight;
 
         const int gap = 8;
@@ -179,11 +186,12 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
                          $"width=\"100%\" height=\"{svgHeight}\" preserveAspectRatio=\"xMinYMin meet\" " +
                          "xmlns=\"http://www.w3.org/2000/svg\">");
 
-        const int gridLines = 4;
+        var (step, gridLines) = GetAxisScale(maxValue);
+        long axisMax = step * gridLines;
         for (int i = 0; i <= gridLines; i++)
         {
             int x = marginLeft + (i * chartWidth / gridLines);
-            int gridValue = maxValue * i / gridLines;
+            long gridValue = step * i;
 
             _html.AppendLine($"<line x1=\"{x}\" y1=\"{marginTop}\" " +
                              $"x2=\"{x}\" y2=\"{marginTop + chartHeight}\" " +
@@ -204,7 +212,7 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
         for (int i = 0; i < data.Length; i++)
         {
             int barY = startY + i * (barHeight + gap);
-            int barW = maxValue > 0 ? data[i].value * chartWidth / maxValue : 0;
+            int barW = (int)((long)data[i].value * chartWidth / axisMax);
             int centerY = barY + barHeight / 2;
 
             _html.AppendLine($"<rect x=\"{marginLeft}\" y=\"{barY}\" " +
@@ -217,7 +225,7 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
 
             _html.AppendLine($"<text x=\"{marginLeft - 8}\" y=\"{centerY + 4}\" " +
                              $"text-anchor=\"end\" font-size=\"13\" fill=\"#333\">" +
-                             $"{Enc(data[i].label)}</text>");
+                             $"{FitLabel(data[i].label, maxLabelChars)}</text>");
         }
 
         _html.AppendLine("</svg>");
@@ -434,11 +442,12 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
                          $"width=\"100%\" height=\"{svgHeight + legendHeight}\" preserveAspectRatio=\"xMinYMin meet\" " +
                          "xmlns=\"http://www.w3.org/2000/svg\">");
 
-        const int gridLines = 4;
+        var (step, gridLines) = GetAxisScale(maxValue);
+        long axisMax = step * gridLines;
         for (int i = 0; i <= gridLines; i++)
         {
             int y = marginTop + chartHeight - (i * chartHeight / gridLines);
-            int gridValue = maxValue * i / gridLines;
+            long gridValue = step * i;
 
             _html.AppendLine($"<line x1=\"{marginLeft}\" y1=\"{y}\" " +
                              $"x2=\"{svgWidth - marginRight}\" y2=\"{y}\" " +
@@ -478,7 +487,7 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
             for (int i = 0; i < points.Length; i++)
             {
                 int x = marginLeft + (points.Length > 1 ? i * chartWidth / (points.Length - 1) : chartWidth / 2);
-                int y = marginTop + chartHeight - (maxValue > 0 ? points[i].value * chartHeight / maxValue : 0);
+                int y = marginTop + chartHeight - (int)((long)points[i].value * chartHeight / axisMax);
                 pointCoords.Add((x, y));
             }
 
@@ -515,6 +524,39 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Chooses a whole-number axis step from the 1, 2, 2.5, 5 × 10ⁿ series giving at most four
+    /// intervals, and the number of intervals needed to reach <paramref name="maxValue"/>.
+    /// </summary>
+    private static (long step, int gridLines) GetAxisScale(int maxValue)
+    {
+        const int maxGridLines = 4;
+        for (long magnitude = 1; ; magnitude *= 10)
+        {
+            foreach (long step in (long[])[magnitude, 2 * magnitude, 25 * magnitude / 10, 5 * magnitude])
+            {
+                if (step * maxGridLines >= maxValue)
+                {
+                    return (step, (int)((maxValue + step - 1) / step));
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Encodes a label, shortening it with an ellipsis if it exceeds <paramref name="maxChars"/>;
+    /// the full label is kept in a tooltip.
+    /// </summary>
+    private static string FitLabel(string? label, int maxChars)
+    {
+        label ??= string.Empty;
+        if (label.Length <= maxChars)
+        {
+            return Enc(label);
+        }
+        return $"<title>{Enc(label)}</title>{Enc(label[..Math.Max(0, maxChars - 1)])}…";
+    }
 
     private string GetAlignmentStyle() => _options.ChartAlignment switch
     {

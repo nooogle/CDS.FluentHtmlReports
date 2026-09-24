@@ -15,7 +15,7 @@ internal class TextRenderer(StringBuilder _html)
     internal void AddHeading(string title, HeadingLevel level)
     {
         int tag = (int)level;
-        _html.AppendLine($"<h{tag}>{title}</h{tag}>");
+        _html.AppendLine($"<h{tag}>{Enc(title)}</h{tag}>");
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ internal class TextRenderer(StringBuilder _html)
     /// </summary>
     internal void AddMetadata(string label, string value)
     {
-        _html.AppendLine($"<div class=\"metadata\"><span><strong>{label}:</strong> {value}</span></div>");
+        _html.AppendLine($"<div class=\"metadata\"><span><strong>{Enc(label)}:</strong> {Enc(value)}</span></div>");
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ internal class TextRenderer(StringBuilder _html)
         _html.AppendLine("<div class=\"metadata\">");
         foreach (var value in values)
         {
-            _html.AppendLine($"<span><strong>{value.Item1}:</strong> {value.Item2}</span>");
+            _html.AppendLine($"<span><strong>{Enc(value.Item1)}:</strong> {Enc(value.Item2)}</span>");
         }
         _html.AppendLine("</div>");
     }
