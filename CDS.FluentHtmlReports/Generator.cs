@@ -513,7 +513,7 @@ public class Generator
         html.AppendLine("<head>");
         html.AppendLine("<meta charset=\"utf-8\">");
         html.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
-        html.AppendLine($"<title>{title}</title>");
+        html.AppendLine($"<title>{HtmlHelpers.Enc(title)}</title>");
         html.AppendLine("<style>");
         AppendStyles(html);
         html.AppendLine("</style>");
