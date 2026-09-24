@@ -320,6 +320,18 @@ public class GeneratorTests
         html.Should().Contain("…</text>");
     }
 
+    [TestMethod]
+    [TestCategory("Chart")]
+    public void AddVerticalBarChart_LargeValues_DoNotOverflow()
+    {
+        var html = Generator.Create("Test")
+            .AddVerticalBarChart("Big", [("A", int.MaxValue), ("B", 50_000_000)])
+            .Generate();
+
+        AxisLabels(html).Should().Equal("0", "1000000000", "2000000000", "3000000000");
+        html.Should().NotMatchRegex(@"<rect [^>]*(y|height)=""-");
+    }
+
     private static string[] AxisLabels(string html) =>
         System.Text.RegularExpressions.Regex
             .Matches(html, @"font-size=""11"" fill=""#888"">(\d+)</text>")
@@ -482,6 +494,8 @@ public class GeneratorTests
         var html = Generator.Create("A & B <script>").Generate();
 
         html.Should().Contain("<title>A &amp; B &lt;script&gt;</title>");
+        html.Should().Contain("<h1>A &amp; B &lt;script&gt;</h1>");
+        html.Should().NotContain("<script>");
     }
 
     [TestMethod]

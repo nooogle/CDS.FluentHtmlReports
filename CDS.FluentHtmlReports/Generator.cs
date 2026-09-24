@@ -32,7 +32,7 @@ public class Generator
     {
         var generator = new Generator();
         AppendDocumentStart(generator._html, title);
-        generator._html.AppendLine($"<h1>{title}</h1>");
+        generator._html.AppendLine($"<h1>{HtmlHelpers.Enc(title)}</h1>");
         return generator;
     }
 

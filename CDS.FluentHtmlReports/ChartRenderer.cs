@@ -68,11 +68,11 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
                          "xmlns=\"http://www.w3.org/2000/svg\">");
 
         var (step, gridLines) = GetAxisScale(maxValue);
-        int axisMax = step * gridLines;
+        long axisMax = step * gridLines;
         for (int i = 0; i <= gridLines; i++)
         {
             int y = marginTop + chartHeight - (i * chartHeight / gridLines);
-            int gridValue = step * i;
+            long gridValue = step * i;
 
             _html.AppendLine($"<line x1=\"{marginLeft}\" y1=\"{y}\" " +
                              $"x2=\"{svgWidth - marginRight}\" y2=\"{y}\" " +
@@ -93,7 +93,7 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
         for (int i = 0; i < data.Length; i++)
         {
             int barX = startX + i * (barWidth + gap);
-            int barHeight = data[i].value * chartHeight / axisMax;
+            int barHeight = (int)((long)data[i].value * chartHeight / axisMax);
             int barY = marginTop + chartHeight - barHeight;
             int centerX = barX + barWidth / 2;
 
@@ -187,11 +187,11 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
                          "xmlns=\"http://www.w3.org/2000/svg\">");
 
         var (step, gridLines) = GetAxisScale(maxValue);
-        int axisMax = step * gridLines;
+        long axisMax = step * gridLines;
         for (int i = 0; i <= gridLines; i++)
         {
             int x = marginLeft + (i * chartWidth / gridLines);
-            int gridValue = step * i;
+            long gridValue = step * i;
 
             _html.AppendLine($"<line x1=\"{x}\" y1=\"{marginTop}\" " +
                              $"x2=\"{x}\" y2=\"{marginTop + chartHeight}\" " +
@@ -212,7 +212,7 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
         for (int i = 0; i < data.Length; i++)
         {
             int barY = startY + i * (barHeight + gap);
-            int barW = data[i].value * chartWidth / axisMax;
+            int barW = (int)((long)data[i].value * chartWidth / axisMax);
             int centerY = barY + barHeight / 2;
 
             _html.AppendLine($"<rect x=\"{marginLeft}\" y=\"{barY}\" " +
@@ -443,11 +443,11 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
                          "xmlns=\"http://www.w3.org/2000/svg\">");
 
         var (step, gridLines) = GetAxisScale(maxValue);
-        int axisMax = step * gridLines;
+        long axisMax = step * gridLines;
         for (int i = 0; i <= gridLines; i++)
         {
             int y = marginTop + chartHeight - (i * chartHeight / gridLines);
-            int gridValue = step * i;
+            long gridValue = step * i;
 
             _html.AppendLine($"<line x1=\"{marginLeft}\" y1=\"{y}\" " +
                              $"x2=\"{svgWidth - marginRight}\" y2=\"{y}\" " +
@@ -487,7 +487,7 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
             for (int i = 0; i < points.Length; i++)
             {
                 int x = marginLeft + (points.Length > 1 ? i * chartWidth / (points.Length - 1) : chartWidth / 2);
-                int y = marginTop + chartHeight - points[i].value * chartHeight / axisMax;
+                int y = marginTop + chartHeight - (int)((long)points[i].value * chartHeight / axisMax);
                 pointCoords.Add((x, y));
             }
 
@@ -529,7 +529,7 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
     /// Chooses a whole-number axis step from the 1, 2, 2.5, 5 × 10ⁿ series giving at most four
     /// intervals, and the number of intervals needed to reach <paramref name="maxValue"/>.
     /// </summary>
-    private static (int step, int gridLines) GetAxisScale(int maxValue)
+    private static (long step, int gridLines) GetAxisScale(int maxValue)
     {
         const int maxGridLines = 4;
         for (long magnitude = 1; ; magnitude *= 10)
@@ -538,7 +538,7 @@ internal class ChartRenderer(StringBuilder _html, ReportOptions _options)
             {
                 if (step * maxGridLines >= maxValue)
                 {
-                    return ((int)step, (int)((maxValue + step - 1) / step));
+                    return (step, (int)((maxValue + step - 1) / step));
                 }
             }
         }
