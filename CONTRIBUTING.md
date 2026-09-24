@@ -29,7 +29,7 @@ Be respectful, constructive, and professional in all interactions.
 3. **Add tests** for any new functionality
 4. **Ensure all tests pass**: `dotnet test`
 5. **Update documentation** in README.md if needed
-6. **Submit a pull request** with a descriptive title — GitHub's auto-generated release notes list merged PRs by title
+6. **Submit a pull request** with a descriptive title and a label (`bug`, `enhancement`, `documentation` or `breaking-change`) — GitHub's generated release notes list merged PRs by title, grouped by label
 
 ## Development Setup
 
