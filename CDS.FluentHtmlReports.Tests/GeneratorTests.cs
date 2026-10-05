@@ -299,10 +299,10 @@ public class GeneratorTests
     public void AddHorizontalBarChart_WidensMarginForLongLabel()
     {
         var html = Generator.Create("Test")
-            .AddHorizontalBarChart("Inspections", [("IVMS.DemoInspection", 3)])
+            .AddHorizontalBarChart("Inspections", [("Demo.LongInspection", 3)])
             .Generate();
 
-        html.Should().Contain(">IVMS.DemoInspection</text>");
+        html.Should().Contain(">Demo.LongInspection</text>");
         html.Should().MatchRegex(@"<rect x=""(1[5-9]\d|[2-9]\d\d)""");
     }
 
